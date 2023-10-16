@@ -84,6 +84,7 @@
   const {delete_column} =  require('./nonterminal/ddl/alterTable/delete_column');
   const {rename_to} = require("./nonterminal/ddl/alterTable/renameto");
   const {rename_column} = require("./nonterminal/ddl/alterTable/rename_column");
+  const {delete_table} = require("./nonterminal/ddl/dropTable/deleteTable");
 	const {LiteralExpression} = require('./terminal/LiteralExpression');
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
 
@@ -118,6 +119,11 @@ instruccion
 ddl
   :crearTabla { $$ = $1; }
   |alterTable { $$ = $1; }
+  |dropTable  { $$ = $1; }
+;
+
+dropTable
+  :TK_DROP TK_TABLE atributoTabla   {$$ = new delete_table(@1.first_line, @1.first_column, $3); }
 ;
 
 alterTable

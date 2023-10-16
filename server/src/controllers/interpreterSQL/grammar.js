@@ -72,12 +72,12 @@
   }
 */
 var grammar = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[1,11],$V2=[1,10],$V3=[1,12],$V4=[2,5,12,21,28],$V5=[1,31],$V6=[24,25],$V7=[8,20,24,25],$V8=[1,59],$V9=[1,60],$Va=[1,61],$Vb=[1,62],$Vc=[1,63],$Vd=[1,64],$Ve=[1,65];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[1,13],$V2=[1,12],$V3=[1,11],$V4=[1,14],$V5=[2,5,13,16,22,29],$V6=[1,27],$V7=[8,21,25,26],$V8=[25,26],$V9=[1,63],$Va=[1,64],$Vb=[1,65],$Vc=[1,66],$Vd=[1,67],$Ve=[1,68],$Vf=[1,69];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"ini":3,"instrucciones":4,"EOF":5,"instruccion":6,"ddl":7,"TK_PTCOMA":8,"dml":9,"crearTabla":10,"alterTable":11,"TK_ALTER":12,"TK_TABLE":13,"TK_IDENTIFICADOR":14,"TK_ADD":15,"atributoTabla":16,"TK_DROP":17,"TK_COLUMN":18,"TK_RENAME":19,"TK_TO":20,"TK_CREATE":21,"TK_PARIZQ":22,"listaAtributosTabla":23,"TK_PARDER":24,"TK_COMA":25,"tipos":26,"insertar":27,"TK_INSERT":28,"TK_INTO":29,"listaIDS":30,"TK_VALUES":31,"listaValores":32,"valor":33,"TK_ENTERO":34,"TK_DOUBLE":35,"TK_DATE":36,"TK_VARCHAR":37,"TK_TRUE":38,"TK_FALSE":39,"TK_NULL":40,"TK_TENTERO":41,"TK_TDOUBLE":42,"TK_TDATE":43,"TK_TVARCHAR":44,"TK_TBOOLEAN":45,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",8:"TK_PTCOMA",12:"TK_ALTER",13:"TK_TABLE",14:"TK_IDENTIFICADOR",15:"TK_ADD",17:"TK_DROP",18:"TK_COLUMN",19:"TK_RENAME",20:"TK_TO",21:"TK_CREATE",22:"TK_PARIZQ",24:"TK_PARDER",25:"TK_COMA",28:"TK_INSERT",29:"TK_INTO",31:"TK_VALUES",34:"TK_ENTERO",35:"TK_DOUBLE",36:"TK_DATE",37:"TK_VARCHAR",38:"TK_TRUE",39:"TK_FALSE",40:"TK_NULL",41:"TK_TENTERO",42:"TK_TDOUBLE",43:"TK_TDATE",44:"TK_TVARCHAR",45:"TK_TBOOLEAN"},
-productions_: [0,[3,2],[4,2],[4,1],[6,2],[6,2],[6,2],[7,1],[7,1],[11,5],[11,6],[11,6],[11,8],[10,6],[23,3],[23,1],[16,2],[16,1],[9,1],[27,10],[30,3],[30,1],[32,3],[32,1],[33,1],[33,1],[33,1],[33,1],[33,1],[33,1],[33,1],[26,1],[26,1],[26,1],[26,1],[26,1]],
+symbols_: {"error":2,"ini":3,"instrucciones":4,"EOF":5,"instruccion":6,"ddl":7,"TK_PTCOMA":8,"dml":9,"crearTabla":10,"alterTable":11,"dropTable":12,"TK_DROP":13,"TK_TABLE":14,"atributoTabla":15,"TK_ALTER":16,"TK_IDENTIFICADOR":17,"TK_ADD":18,"TK_COLUMN":19,"TK_RENAME":20,"TK_TO":21,"TK_CREATE":22,"TK_PARIZQ":23,"listaAtributosTabla":24,"TK_PARDER":25,"TK_COMA":26,"tipos":27,"insertar":28,"TK_INSERT":29,"TK_INTO":30,"listaIDS":31,"TK_VALUES":32,"listaValores":33,"valor":34,"TK_ENTERO":35,"TK_DOUBLE":36,"TK_DATE":37,"TK_VARCHAR":38,"TK_TRUE":39,"TK_FALSE":40,"TK_NULL":41,"TK_TENTERO":42,"TK_TDOUBLE":43,"TK_TDATE":44,"TK_TVARCHAR":45,"TK_TBOOLEAN":46,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",8:"TK_PTCOMA",13:"TK_DROP",14:"TK_TABLE",16:"TK_ALTER",17:"TK_IDENTIFICADOR",18:"TK_ADD",19:"TK_COLUMN",20:"TK_RENAME",21:"TK_TO",22:"TK_CREATE",23:"TK_PARIZQ",25:"TK_PARDER",26:"TK_COMA",29:"TK_INSERT",30:"TK_INTO",32:"TK_VALUES",35:"TK_ENTERO",36:"TK_DOUBLE",37:"TK_DATE",38:"TK_VARCHAR",39:"TK_TRUE",40:"TK_FALSE",41:"TK_NULL",42:"TK_TENTERO",43:"TK_TDOUBLE",44:"TK_TDATE",45:"TK_TVARCHAR",46:"TK_TBOOLEAN"},
+productions_: [0,[3,2],[4,2],[4,1],[6,2],[6,2],[6,2],[7,1],[7,1],[7,1],[12,3],[11,5],[11,6],[11,6],[11,8],[10,6],[24,3],[24,1],[15,2],[15,1],[9,1],[28,10],[31,3],[31,1],[33,3],[33,1],[34,1],[34,1],[34,1],[34,1],[34,1],[34,1],[34,1],[27,1],[27,1],[27,1],[27,1],[27,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -89,7 +89,7 @@ break;
 case 2:
  $$[$0-1].push($$[$0]); this.$ = $$[$0-1]; 
 break;
-case 3: case 15: case 21: case 23:
+case 3: case 17: case 23: case 25:
  this.$ = [$$[$0]]; 
 break;
 case 4: case 5:
@@ -98,76 +98,79 @@ break;
 case 6:
    console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
 break;
-case 7: case 8: case 18:
+case 7: case 8: case 9: case 20:
  this.$ = $$[$0]; 
 break;
-case 9:
-this.$ = new add_column(_$[$0-4].first_line, _$[$0-4].first_column, $$[$0-2], $$[$0]); 
-break;
 case 10:
-this.$ = new delete_column(_$[$0-5].first_line, _$[$0-5].first_column, $$[$0-3], $$[$0]); 
+this.$ = new delete_table(_$[$0-2].first_line, _$[$0-2].first_column, $$[$0]); 
 break;
 case 11:
-this.$ = new rename_to(_$[$0-5].first_line, _$[$0-5].first_column, $$[$0-3], $$[$0]); 
+this.$ = new add_column(_$[$0-4].first_line, _$[$0-4].first_column, $$[$0-2], $$[$0]); 
 break;
 case 12:
-this.$ = new rename_column(_$[$0-7].first_line, _$[$0-7].first_column, $$[$0-5], $$[$0-2], $$[$0]); 
+this.$ = new delete_column(_$[$0-5].first_line, _$[$0-5].first_column, $$[$0-3], $$[$0]); 
 break;
 case 13:
+this.$ = new rename_to(_$[$0-5].first_line, _$[$0-5].first_column, $$[$0-3], $$[$0]); 
+break;
+case 14:
+this.$ = new rename_column(_$[$0-7].first_line, _$[$0-7].first_column, $$[$0-5], $$[$0-2], $$[$0]); 
+break;
+case 15:
  this.$ = new CreateTableExpression(_$[$0-5].first_line, _$[$0-5].first_column,$$[$0-3], $$[$0-1]); 
 break;
-case 14: case 20: case 22:
+case 16: case 22: case 24:
  $$[$0-2].push($$[$0]); this.$ = $$[$0-2];  
 break;
-case 16:
+case 18:
  this.$ = new FieldExpression(_$[$0-1].first_line, _$[$0-1].first_column,$$[$0-1], $$[$0]); 
 break;
-case 17:
+case 19:
 this.$ = $$[$0]
 break;
-case 19:
+case 21:
  this.$ = new InsertExpression(_$[$0-9].first_line, _$[$0-9].first_column,$$[$0-7], $$[$0-5],$$[$0-1]); 
 break;
-case 24:
+case 26:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.INT); 
 break;
-case 25:
+case 27:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.DOUBLE); 
 break;
-case 26:
+case 28:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.DATE); 
 break;
-case 27:
+case 29:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.VARCHAR); 
 break;
-case 28:
+case 30:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.BOOLEAN);
 break;
-case 29:
+case 31:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.BOOLEAN); 
 break;
-case 30:
+case 32:
  this.$ = new LiteralExpression(_$[$0].first_line, _$[$0].first_column,$$[$0], Type.NULL); 
 break;
-case 31:
+case 33:
  this.$ = Type.INT; 
 break;
-case 32:
+case 34:
  this.$ = Type.DOUBLE; 
 break;
-case 33:
+case 35:
  this.$ = Type.DATE; 
 break;
-case 34:
+case 36:
  this.$ = Type.VARCHAR; 
 break;
-case 35:
+case 37:
  this.$ = Type.BOOLEAN; 
 break;
 }
 },
-table: [{2:$V0,3:1,4:2,6:3,7:4,9:5,10:7,11:8,12:$V1,21:$V2,27:9,28:$V3},{1:[3]},{2:$V0,5:[1,13],6:14,7:4,9:5,10:7,11:8,12:$V1,21:$V2,27:9,28:$V3},o($V4,[2,3]),{8:[1,15]},{8:[1,16]},{8:[1,17]},{8:[2,7]},{8:[2,8]},{8:[2,18]},{13:[1,18]},{13:[1,19]},{29:[1,20]},{1:[2,1]},o($V4,[2,2]),o($V4,[2,4]),o($V4,[2,5]),o($V4,[2,6]),{14:[1,21]},{14:[1,22]},{14:[1,23]},{22:[1,24]},{15:[1,25],17:[1,26],19:[1,27]},{22:[1,28]},{14:$V5,16:30,23:29},{14:$V5,16:32},{18:[1,33]},{18:[1,35],20:[1,34]},{14:[1,37],30:36},{24:[1,38],25:[1,39]},o($V6,[2,15]),o($V7,[2,17],{26:40,41:[1,41],42:[1,42],43:[1,43],44:[1,44],45:[1,45]}),{8:[2,9]},{14:$V5,16:46},{14:$V5,16:47},{14:$V5,16:48},{24:[1,49],25:[1,50]},o($V6,[2,21]),{8:[2,13]},{14:$V5,16:51},o($V7,[2,16]),o($V7,[2,31]),o($V7,[2,32]),o($V7,[2,33]),o($V7,[2,34]),o($V7,[2,35]),{8:[2,10]},{8:[2,11]},{20:[1,52]},{31:[1,53]},{14:[1,54]},o($V6,[2,14]),{14:$V5,16:55},{22:[1,56]},o($V6,[2,20]),{8:[2,12]},{32:57,33:58,34:$V8,35:$V9,36:$Va,37:$Vb,38:$Vc,39:$Vd,40:$Ve},{24:[1,66],25:[1,67]},o($V6,[2,23]),o($V6,[2,24]),o($V6,[2,25]),o($V6,[2,26]),o($V6,[2,27]),o($V6,[2,28]),o($V6,[2,29]),o($V6,[2,30]),{8:[2,19]},{33:68,34:$V8,35:$V9,36:$Va,37:$Vb,38:$Vc,39:$Vd,40:$Ve},o($V6,[2,22])],
-defaultActions: {7:[2,7],8:[2,8],9:[2,18],13:[2,1],32:[2,9],38:[2,13],46:[2,10],47:[2,11],55:[2,12],66:[2,19]},
+table: [{2:$V0,3:1,4:2,6:3,7:4,9:5,10:7,11:8,12:9,13:$V1,16:$V2,22:$V3,28:10,29:$V4},{1:[3]},{2:$V0,5:[1,15],6:16,7:4,9:5,10:7,11:8,12:9,13:$V1,16:$V2,22:$V3,28:10,29:$V4},o($V5,[2,3]),{8:[1,17]},{8:[1,18]},{8:[1,19]},{8:[2,7]},{8:[2,8]},{8:[2,9]},{8:[2,20]},{14:[1,20]},{14:[1,21]},{14:[1,22]},{30:[1,23]},{1:[2,1]},o($V5,[2,2]),o($V5,[2,4]),o($V5,[2,5]),o($V5,[2,6]),{17:[1,24]},{17:[1,25]},{15:26,17:$V6},{17:[1,28]},{23:[1,29]},{13:[1,31],18:[1,30],20:[1,32]},{8:[2,10]},o($V7,[2,19],{27:33,42:[1,34],43:[1,35],44:[1,36],45:[1,37],46:[1,38]}),{23:[1,39]},{15:41,17:$V6,24:40},{15:42,17:$V6},{19:[1,43]},{19:[1,45],21:[1,44]},o($V7,[2,18]),o($V7,[2,33]),o($V7,[2,34]),o($V7,[2,35]),o($V7,[2,36]),o($V7,[2,37]),{17:[1,47],31:46},{25:[1,48],26:[1,49]},o($V8,[2,17]),{8:[2,11]},{15:50,17:$V6},{15:51,17:$V6},{15:52,17:$V6},{25:[1,53],26:[1,54]},o($V8,[2,23]),{8:[2,15]},{15:55,17:$V6},{8:[2,12]},{8:[2,13]},{21:[1,56]},{32:[1,57]},{17:[1,58]},o($V8,[2,16]),{15:59,17:$V6},{23:[1,60]},o($V8,[2,22]),{8:[2,14]},{33:61,34:62,35:$V9,36:$Va,37:$Vb,38:$Vc,39:$Vd,40:$Ve,41:$Vf},{25:[1,70],26:[1,71]},o($V8,[2,25]),o($V8,[2,26]),o($V8,[2,27]),o($V8,[2,28]),o($V8,[2,29]),o($V8,[2,30]),o($V8,[2,31]),o($V8,[2,32]),{8:[2,21]},{34:72,35:$V9,36:$Va,37:$Vb,38:$Vc,39:$Vd,40:$Ve,41:$Vf},o($V8,[2,24])],
+defaultActions: {7:[2,7],8:[2,8],9:[2,9],10:[2,20],15:[2,1],26:[2,10],42:[2,11],48:[2,15],50:[2,12],51:[2,13],59:[2,14],70:[2,21]},
 parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -424,6 +427,7 @@ _handle_error:
   const {delete_column} =  require('./nonterminal/ddl/alterTable/delete_column');
   const {rename_to} = require("./nonterminal/ddl/alterTable/renameto");
   const {rename_column} = require("./nonterminal/ddl/alterTable/rename_column");
+  const {delete_table} = require("./nonterminal/ddl/dropTable/deleteTable");
 	const {LiteralExpression} = require('./terminal/LiteralExpression');
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
 
@@ -765,15 +769,15 @@ case 3:
 break;
 case 4:return 8;
 break;
-case 5:return 22;
+case 5:return 23;
 break;
-case 6:return 24;
+case 6:return 25;
 break;
 case 7:return 'TK_PUNTO';
 break;
 case 8:return 'TK_DOSPUNTOS';
 break;
-case 9:return 25;
+case 9:return 26;
 break;
 case 10:return 'TK_CORIZR';
 break;
@@ -795,51 +799,51 @@ case 18:return 'TK_MAYORQUE';
 break;
 case 19:return 'TK_MAYORIGUAL';
 break;
-case 20:return 41;
+case 20:return 42;
 break;
-case 21:return 42;
+case 21:return 43;
 break;
-case 22:return 43;
+case 22:return 44;
 break;
-case 23:return 44;
+case 23:return 45;
 break;
-case 24:return 45;
+case 24:return 46;
 break;
-case 25:return 38;
+case 25:return 39;
 break;
-case 26:return 39;
+case 26:return 40;
 break;
-case 27:return 40;
+case 27:return 41;
 break;
-case 28:return 21;
+case 28:return 22;
 break;
-case 29:return 12;
+case 29:return 16;
 break;
-case 30:return 15;
+case 30:return 18;
 break;
-case 31:return 17;
+case 31:return 13;
 break;
-case 32:return 19;
+case 32:return 20;
 break;
-case 33:return 20;
+case 33:return 21;
 break;
-case 34:return 18;
+case 34:return 19;
 break;
-case 35:return 13;
+case 35:return 14;
 break;
-case 36:return 28;
+case 36:return 29;
 break;
-case 37:return 29;
+case 37:return 30;
 break;
-case 38:return 31;
+case 38:return 32;
 break;
-case 39:return 14;
+case 39:return 17;
 break;
-case 40:return 34;
+case 40:return 35;
 break;
-case 41:return 35;
+case 41:return 36;
 break;
-case 42:return 36;
+case 42:return 37;
 break;
 case 43:cadena="";this.begin("string");
 break;
@@ -855,7 +859,7 @@ case 48:cadena+="\\";
 break;
 case 49:cadena+="\'";
 break;
-case 50:yy_.yytext=cadena; this.popState(); return 37;
+case 50:yy_.yytext=cadena; this.popState(); return 38;
 break;
 case 51:return 5;
 break;

@@ -121,15 +121,21 @@ export class Context {
     public rename_column(id: string, name_colum: string, new_name: string){
       let env: Context | null = this;
       if(env.tables.has(id.toLowerCase())){
-       
-       
         //Limpie lista original
-
         for(let objeto of env.tables.get(id.toLowerCase())!.fields){
           if(objeto.value == name_colum){
             objeto["value"] = new_name;
           }
         }
+        this.getTables();
+      }
+    }
+
+    //Eliminar una tabla 
+    public delete_table(id:string){
+      let env: Context | null = this;
+      if(env.tables.has(id.toLowerCase())){
+        env.tables.delete(id.toLowerCase());
         this.getTables();
       }
     }
