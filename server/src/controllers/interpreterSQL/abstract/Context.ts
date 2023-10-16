@@ -56,7 +56,7 @@ export class Context {
 
   }
 
-    // agregar una tabla
+    // agregar una columna a la tabla
     public add_column(id: string, field: Literal) { //nombre_tabla, object Tabla.ts
       // verificar el ambito
       let env: Context | null = this; //esta variable sera ya sea tipo contexto o null y sele asigna el contexto que la llamo
@@ -71,6 +71,30 @@ export class Context {
         //printlist.push("Error, La tabla "+id+" ya existe en el entorno");
       }
     }
+
+    //Eliminar una columna a la tabla
+    public delete_column(id: string, column: string){
+      let env: Context | null = this;
+      if(env.tables.has(id.toLowerCase())){
+        const table = env.tables.get(id.toLowerCase())!;
+        const lista = table.fields;  //Obtengo la lista con los encabezados
+
+        //Creo una lista con encabezados excepto con el que coincida 
+        const new_list = lista.filter(obj => obj.value !== column);
+  
+        //Limpio los encabezados de la tabla
+        table.fields.splice(0, table.fields.length);
+
+        //vuelco a cargar la lista actualizada 
+        for(let objeto of new_list){
+          table.fields.push(objeto);
+        }
+        this.getTables();
+        
+      }
+    }
+
+
    // obtener el entorno global
    public getGlobal(): Context {
     // verificar el ambito

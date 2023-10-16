@@ -47,6 +47,8 @@
 "create"          return 'TK_CREATE';
 "alter"           return 'TK_ALTER';
 "add"             return 'TK_ADD';
+"drop"            return 'TK_DROP';
+"column"          return 'TK_COLUMN';
 "table"           return 'TK_TABLE';
 "insert"      return 'TK_INSERT';
 "into"        return 'TK_INTO';
@@ -77,6 +79,7 @@
 	const {FieldExpression} = require('./terminal/FieldExpression');
 	const {CreateTableExpression} = require('./nonterminal/ddl/createTable/CreateTableExpression');
   const {add_column} = require('./nonterminal/ddl/alterTable/add_column');
+  const {delete_column} =  require('./nonterminal/ddl/alterTable/delete_column');
 	const {LiteralExpression} = require('./terminal/LiteralExpression');
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
 
@@ -114,8 +117,8 @@ ddl
 ;
 
 alterTable
-  :TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_ADD atributoTabla
-  {$$ = new add_column(@1.first_line, @1.first_column, $3, $5); }
+  :TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_ADD atributoTabla    {$$ = new add_column(@1.first_line, @1.first_column, $3, $5); }
+  |TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_DROP TK_COLUMN atributoTabla   {$$ = new delete_column(@1.first_line, @1.first_column, $3, $6); } 
 ;
 
 crearTabla
@@ -130,6 +133,7 @@ listaAtributosTabla
 
 atributoTabla
   : TK_IDENTIFICADOR tipos { $$ = new FieldExpression(@1.first_line, @1.first_column,$1, $2); }
+  | TK_IDENTIFICADOR {$$ = $1}
 ;
 
 // DML
