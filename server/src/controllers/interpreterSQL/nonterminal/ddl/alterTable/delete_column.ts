@@ -8,6 +8,6 @@ export class delete_column extends AbstractSQLExpression {
     }
 
     public interpret(context: Context){
-        context.delete_column(this.name, this.name_column)
+        context.delete_column(this.name, this.name_column);
     }
 }

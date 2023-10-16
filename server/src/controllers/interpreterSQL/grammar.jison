@@ -48,6 +48,8 @@
 "alter"           return 'TK_ALTER';
 "add"             return 'TK_ADD';
 "drop"            return 'TK_DROP';
+"rename"          return 'TK_RENAME';
+"to"              return 'TK_TO';
 "column"          return 'TK_COLUMN';
 "table"           return 'TK_TABLE';
 "insert"      return 'TK_INSERT';
@@ -80,6 +82,7 @@
 	const {CreateTableExpression} = require('./nonterminal/ddl/createTable/CreateTableExpression');
   const {add_column} = require('./nonterminal/ddl/alterTable/add_column');
   const {delete_column} =  require('./nonterminal/ddl/alterTable/delete_column');
+  const {rename_to} = require("./nonterminal/ddl/alterTable/renameto");
 	const {LiteralExpression} = require('./terminal/LiteralExpression');
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
 
@@ -119,6 +122,7 @@ ddl
 alterTable
   :TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_ADD atributoTabla    {$$ = new add_column(@1.first_line, @1.first_column, $3, $5); }
   |TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_DROP TK_COLUMN atributoTabla   {$$ = new delete_column(@1.first_line, @1.first_column, $3, $6); } 
+  |TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_RENAME TK_TO atributoTabla     {$$ = new rename_to(@1.first_line, @1.first_column, $3, $6); }
 ;
 
 crearTabla

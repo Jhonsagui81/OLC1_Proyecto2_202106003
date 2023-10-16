@@ -94,6 +94,29 @@ export class Context {
       }
     }
 
+    //Actualiza el nombre de la tabla 
+    public rename_to(id: string, new_name: string){
+      let env: Context | null = this;
+      if(env.tables.has(id.toLowerCase())){
+        let table = env.tables.get(id.toLowerCase())!;
+        
+        //cambia el nombre de la tabla 
+        table["name"] = new_name;
+        //Cambia el nombre en la estructura MAP para esa tabla
+        //elimina el anterior
+        env.tables.delete(id.toLowerCase());
+        //inserta la tabla con la nueva key
+        env.tables.set(new_name.toLowerCase(), table);
+        
+        //eliminar la tabla anterio, no actualizada
+
+        this.getTables();
+
+      }else{
+        console.log("No existe tabla con ese id!")
+      }
+    }
+
 
    // obtener el entorno global
    public getGlobal(): Context {
