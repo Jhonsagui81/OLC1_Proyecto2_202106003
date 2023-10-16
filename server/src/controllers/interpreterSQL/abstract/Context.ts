@@ -117,6 +117,22 @@ export class Context {
       }
     }
 
+    //Actualiza el nombre de alguna columna
+    public rename_column(id: string, name_colum: string, new_name: string){
+      let env: Context | null = this;
+      if(env.tables.has(id.toLowerCase())){
+       
+       
+        //Limpie lista original
+
+        for(let objeto of env.tables.get(id.toLowerCase())!.fields){
+          if(objeto.value == name_colum){
+            objeto["value"] = new_name;
+          }
+        }
+        this.getTables();
+      }
+    }
 
    // obtener el entorno global
    public getGlobal(): Context {
