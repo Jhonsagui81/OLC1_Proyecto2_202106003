@@ -1,0 +1,1 @@
+const {add_column} = require('./nonterminal/ddl/alterTable/add_column');

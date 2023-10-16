@@ -43,7 +43,10 @@
 "false"             return 'TK_FALSE';
 "null"              return 'TK_NULL';
 
+// ------------>   ddl
 "create"          return 'TK_CREATE';
+"alter"           return 'TK_ALTER';
+"add"             return 'TK_ADD';
 "table"           return 'TK_TABLE';
 "insert"      return 'TK_INSERT';
 "into"        return 'TK_INTO';
@@ -73,8 +76,10 @@
 	const {Type} = require('./abstract/Return');
 	const {FieldExpression} = require('./terminal/FieldExpression');
 	const {CreateTableExpression} = require('./nonterminal/ddl/createTable/CreateTableExpression');
+  const {add_column} = require('./nonterminal/ddl/alterTable/add_column');
 	const {LiteralExpression} = require('./terminal/LiteralExpression');
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
+
 %}
 
 
@@ -105,6 +110,12 @@ instruccion
 
 ddl
   :crearTabla { $$ = $1; }
+  |alterTable { $$ = $1; }
+;
+
+alterTable
+  :TK_ALTER TK_TABLE TK_IDENTIFICADOR TK_ADD atributoTabla
+  {$$ = new add_column(@1.first_line, @1.first_column, $3, $5); }
 ;
 
 crearTabla

@@ -1,6 +1,7 @@
 import { Table } from "../bd/Table";
 import { Literal } from "./Return";
 
+
 export class Context {
     //Estructura que permite alamacenar clave(nombretabla): valor(Una instancia de Table.ts) 
     private tables = new Map<string,Table>();   //  mapa de tablas
@@ -18,6 +19,7 @@ export class Context {
         if (!env.tables.has(id.toLowerCase())) {  //SI ESTA TABLA YA EXISTE
           // guardar la tabla en una tabla de simbolos
           env.tables.set(id.toLowerCase(),table); //AGREGARLE al contexto un id de tabla y objeto tabla
+          this.getTables();
         }else {
           console.log("Error, La tabla "+id+" ya existe en el entorno");
           //printlist.push("Error, La tabla "+id+" ya existe en el entorno");
@@ -54,6 +56,21 @@ export class Context {
 
   }
 
+    // agregar una tabla
+    public add_column(id: string, field: Literal) { //nombre_tabla, object Tabla.ts
+      // verificar el ambito
+      let env: Context | null = this; //esta variable sera ya sea tipo contexto o null y sele asigna el contexto que la llamo
+      // verificar si la tabla ya existe
+      if (env.tables.has(id.toLowerCase())) {  //SI ESTA TABLA YA EXISTE
+        const table = env.tables.get(id.toLowerCase())!; //obtiene la tabla
+        table.fields.push(field);
+        this.getTables();
+        
+      }else {
+        console.log("Error, La tabla "+id+" ya existe en el entorno");
+        //printlist.push("Error, La tabla "+id+" ya existe en el entorno");
+      }
+    }
    // obtener el entorno global
    public getGlobal(): Context {
     // verificar el ambito
@@ -80,7 +97,7 @@ export class Context {
         console.log(key);
         // imprimir el nombre de todos los campos
         console.log("Nombre de todos los campos: ");
-        value.tuples.forEach((field) => {
+        value.fields.forEach((field) => {
           console.log(field);
         });
       }
