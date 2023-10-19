@@ -6,7 +6,8 @@ export enum Type{
     DATE = 2,
     VARCHAR = 3,
     BOOLEAN = 4,
-    NULL = 5
+    NULL = 5,
+    NEGATIVE = 6
   }
   
   

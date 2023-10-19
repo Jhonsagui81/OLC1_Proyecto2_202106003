@@ -24,13 +24,26 @@
 "{"                 return 'TK_LLAVEIZQ';
 "}"                 return "TK_LLAVEDER";
 
-
+// ------> Relacionales 
 "="                 return 'TK_IGUALACION';
 "!="                return 'TK_DIFERENCIACION';
 "<"                 return 'TK_MENORQUE';
 "<="                return 'TK_MENORIGUAL';
 ">"                 return 'TK_MAYORQUE';
 ">="                return 'TK_MAYORIGUAL';
+"@"                 return 'TK_ARROBA';
+
+// -------> Operadores aritmeticos
+"+"                 return "TK_MAS";
+"-"                 return "TK_MENOS";
+"*"                 return "TK_POR";
+"/"                 return "TK_DIV";
+"%"                 return "TK_MODULO";
+
+// --------> Operadores logicos
+"AND"               return "TK_AND";
+"OR"                return "TK_OR";
+"NOT"               return "TK_NOT"; 
 
 // tipos de variables
 "int"               return 'TK_TENTERO';
@@ -52,12 +65,23 @@
 "to"              return 'TK_TO';
 "column"          return 'TK_COLUMN';
 "table"           return 'TK_TABLE';
+
+// -------------> dml
 "insert"      return 'TK_INSERT';
 "into"        return 'TK_INTO';
 "values"      return 'TK_VALUES';
 
+// -------------> bloques
+"begin"       return 'TK_BEGIN';
+"end"         return 'TK_END';
+
+// -----------> Declaracion variables
+"declare"         return 'TK_DECLARE';
+"default"         return 'TK_DEFAULT';
+
 [a-zA-Z][a-zA-Z0-9_]*   return 'TK_IDENTIFICADOR';
-[0-9]+\b                return 'TK_ENTERO';
+
+[0-9]+               return 'TK_ENTERO';
 [0-9]+("."[0-9]+)\b     return 'TK_DOUBLE';
 (\d{4})-(\d{1,2})-(\d{1,2}) return 'TK_DATE';
 ["]                             {cadena="";this.begin("string");}
@@ -79,17 +103,34 @@
   // importar tipos
 	const {Type} = require('./abstract/Return');
 	const {FieldExpression} = require('./terminal/FieldExpression');
+	const {LiteralExpression} = require('./terminal/LiteralExpression');
+
+  //DDL
 	const {CreateTableExpression} = require('./nonterminal/ddl/createTable/CreateTableExpression');
   const {add_column} = require('./nonterminal/ddl/alterTable/add_column');
   const {delete_column} =  require('./nonterminal/ddl/alterTable/delete_column');
   const {rename_to} = require("./nonterminal/ddl/alterTable/renameto");
   const {rename_column} = require("./nonterminal/ddl/alterTable/rename_column");
   const {delete_table} = require("./nonterminal/ddl/dropTable/deleteTable");
-	const {LiteralExpression} = require('./terminal/LiteralExpression');
+
+  //DML
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
+
+  //Declaracion variables
+  const {id} = require('./terminal/id');
+  const {aritmetica} = require('./terminal/aritmetica');
+  const {declaracion} = require('./nonterminal/declara_variables/Asignacion');
 
 %}
 
+// ------> Precedencia
+%left 'TK_OR'
+%left 'TK_ADD'
+%right 'TK_NOT'
+%left 'TK_IGUALACION' 'TK_DIFERENCIACION' 'TK_MENORQUE' 'TK_MENORIGUAL' 'TK_MAYORQUE' 'TK_MAYORIGUAL'
+%left 'TK_MAS' 'TK_MENOS'
+%left 'TK_POR' 'TK_DIV' 'TK_MODULO'
+%right UMENOS
 
 %start ini
 %% /* Definición de la gramática */
@@ -112,8 +153,28 @@ instrucciones
 instruccion
 	: ddl   TK_PTCOMA       { $$ = $1; }
 	| dml   TK_PTCOMA       { $$ = $1; }
-	| error TK_PTCOMA
-  	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
+  | funciones TK_PTCOMA   { $$ = $1; }
+  | metodos TK_PTCOMA     { $$ = $1; }
+  | bloques TK_PTCOMA     { $$ = $1; }
+//	| error TK_PTCOMA
+  //	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
+;
+
+bloques
+  : TK_BEGIN instrucci_local TK_END  { $$ = $2; }
+;
+
+//instrucciones_locales
+//  :instrucciones_locales instrucci_local   {  $$ = $1; $$.push($2); }
+//  |instrucci_local  { $$ = []; $$.push($1); }
+//;
+
+instrucci_local
+  :TK_DECLARE atriutos_variables TK_DEFAULT exp TK_PTCOMA   { $$ = new declaracion(@1.first_line, @1.first_column,$2,$4); }
+;
+
+atriutos_variables
+  :TK_ARROBA TK_IDENTIFICADOR tipos { $$ = new FieldExpression(@1.first_line, @1.first_column,$2, $3); }
 ;
 
 ddl
@@ -145,7 +206,7 @@ listaAtributosTabla
 
 atributoTabla
   : TK_IDENTIFICADOR tipos { $$ = new FieldExpression(@1.first_line, @1.first_column,$1, $2); }
-  | TK_IDENTIFICADOR {$$ = $1}
+  | TK_IDENTIFICADOR {$$ = $1; }
 ;
 
 // DML
@@ -168,17 +229,27 @@ listaValores
   | valor { $$ = [$1]; }
 ;
 
+exp 
+  :exp TK_MAS exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, '+', $3 ); }
+  |exp TK_MENOS exp   { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "-", $3 ); }
+  |exp TK_POR exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "*", $3 ); }
+  |exp TK_DIV exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "/", $3 ); }
+  |exp TK_MODULO exp  { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "%", $3 ); }
+  |TK_MENOS valor     { $$ = new LiteralExpression(@1.first_line, @1.first_column, $2, Type.NEGATIVE); }
+  |valor              { $$ = $1; }
+;
+
 valor
-  : TK_ENTERO { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.INT); }
+  : TK_PARIZQ exp TK_PARDER {$$ = $2;}
+  | TK_ENTERO { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.INT); }
   | TK_DOUBLE { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.DOUBLE); }
   | TK_DATE { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.DATE); }
   | TK_VARCHAR { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.VARCHAR); }
   | TK_TRUE { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.BOOLEAN);}
   | TK_FALSE { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.BOOLEAN); }
   | TK_NULL { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.NULL); }
+  | TK_IDENTIFICADOR  { $$ = new id(@1.first_line, @1.first_column,$1); }
 ;
-
-
 
 tipos
   : TK_TENTERO      { $$ = Type.INT; }
@@ -187,3 +258,4 @@ tipos
   | TK_TVARCHAR     { $$ = Type.VARCHAR; }
   | TK_TBOOLEAN     { $$ = Type.BOOLEAN; }
 ;
+

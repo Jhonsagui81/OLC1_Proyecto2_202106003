@@ -30,7 +30,7 @@ class InterpreteController {
         res.json({ consola:"ejecutado correctamente", errores: "ninguno" });
 
       } catch (error) {
-        console.log(error);
+        console.log("este -> "+error);
         res.json({
           consola: error,
           errores: error,

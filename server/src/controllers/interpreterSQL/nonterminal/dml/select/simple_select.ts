@@ -1,4 +1,3 @@
-
 import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { Context } from '../../../abstract/Context';
 import { LiteralExpression } from '../../../terminal/LiteralExpression';
@@ -17,7 +16,7 @@ export class InsertExpression extends AbstractSQLExpression {
             // insertar la tupla en la tabla
             // obtener los valores en un arreglo
             const values = this.values.map((item) => { //iterar los valores
-              const value = item.interpret(context); //cada valor ejecu
+              const value = item.interpret(context); //cada valor ejecutarlo
               return value;
             });
             context.Insert(this.name.toString().toLocaleLowerCase(),this.fields,values);

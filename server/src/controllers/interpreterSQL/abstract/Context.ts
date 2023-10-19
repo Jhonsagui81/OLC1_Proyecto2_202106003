@@ -1,14 +1,42 @@
 import { Table } from "../bd/Table";
 import { Literal } from "./Return";
-
+import { Symbol } from "../bd/Symbol";
+import { Type } from "./Return";
+import { LiteralExpression } from "../terminal/LiteralExpression";
 
 export class Context {
     //Estructura que permite alamacenar clave(nombretabla): valor(Una instancia de Table.ts) 
     private tables = new Map<string,Table>();   //  mapa de tablas
+    private symbolTable = new Map<string,Symbol>();  //Mapa de declaracion variables
 
     // constructor
     constructor(private anterior: Context | null) { //recibe el contexto anterior o nulo en caso contexto global
         this.tables= new Map<string,Table>(); //inicializa la estructura en el constructor
+        this.symbolTable = new Map<string, Symbol>();
+    }
+
+    //Agregar Variables 
+    public add_symbol(id:string, valor: any){
+      let env: Context | null = this;
+      let symbol = new Symbol(valor.valor, id, valor.tipo);
+      if(!env.symbolTable.has(id.toLowerCase())){ //si esta variable no esta en la tabla
+        env.symbolTable.set(id.toLowerCase(), symbol); 
+        //funcion para mostrar variables
+        this.getVariables();
+      } else {
+        console.log("Error la variable "+id+" Ya existe en el entorno");
+      }
+    }
+
+    //Obtener variable 
+    public get_symbol(id:string){
+      let env: Context | null = this;
+      let sym: Symbol = env.symbolTable.get(id.toLowerCase())!;
+      while(sym == undefined && env.anterior != null){
+        env = env.anterior;
+        sym = env.symbolTable.get(id.toLowerCase())!;
+      }
+      return sym;
     }
 
     // agregar una tabla
@@ -27,7 +55,7 @@ export class Context {
       }
     
   // INSERTAR UNA TUPLA
-  public Insert(id: string, fields: [], values: Literal[]) {
+  public Insert(id: string, fields: [], values: LiteralExpression[]) {
     // obtener ambito global
     const contextGlobal = this.getGlobal(); //Se necesita precisamente el contexto global porque ahi estan las tablas
     // verificar si la tabla existe
@@ -172,5 +200,13 @@ export class Context {
       }
     }
 
+    //Mostrar varibles
+    public getVariables(){
+      let env: Context | null = this;
+      console.log("Variables almacenadas: ")
+      for (const [key, value] of env.symbolTable){
+        console.log(key+": "+value.valor);
+      }
+    }
 
 }
