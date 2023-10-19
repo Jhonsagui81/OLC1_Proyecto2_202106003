@@ -78,6 +78,7 @@
 // -----------> Declaracion variables
 "declare"         return 'TK_DECLARE';
 "default"         return 'TK_DEFAULT';
+"set"             return 'TK_SET';
 
 [a-zA-Z][a-zA-Z0-9_]*   return 'TK_IDENTIFICADOR';
 
@@ -122,7 +123,10 @@
   //Declaracion variables
   const {id} = require('./terminal/id');
   const {aritmetica} = require('./terminal/aritmetica');
-  const {declaracion} = require('./nonterminal/declara_variables/Asignacion');
+  const {declaracion} = require('./nonterminal/declara_variables/default');
+  const {una_variable} = require('./nonterminal/declara_variables/unica');
+  const {set} = require('./nonterminal/declara_variables/set');
+  const {varias_var} = require('./nonterminal/declara_variables/varias');
 
 %}
 
@@ -156,8 +160,8 @@ instrucciones
 instruccion_global
 	: ddl   TK_PTCOMA                     { $$ = $1; }
 	| dml   TK_PTCOMA                     { $$ = $1; }
-  | funciones TK_PTCOMA                 { $$ = $1; }
-  | metodos TK_PTCOMA                   { $$ = $1; }
+  //| funciones TK_PTCOMA                 { $$ = $1; }
+  //| metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
 //	| error TK_PTCOMA
   //	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
@@ -184,12 +188,15 @@ instrucci_local
 ;
 
 declaracion
-  :TK_DECLARE atriutos_variables TK_DEFAULT exp   { $$ = new declaracion(@1.first_line, @1.first_column,$2,$4); }
+  :TK_DECLARE atriutos_variables TK_DEFAULT exp           { $$ = new declaracion(@1.first_line, @1.first_column, $2,$4); }
+  |TK_DECLARE atriutos_variables                          { $$ = new una_variable(@1.first_line, @1.first_column, $2 ); }
+  |TK_SET TK_ARROBA TK_IDENTIFICADOR TK_IGUALACION exp    { $$ = new set(@1.first_line, @1.first_column, $3, $5); }
 ;
 
 atriutos_variables
-  :TK_ARROBA TK_IDENTIFICADOR tipos { $$ = new FieldExpression(@1.first_line, @1.first_column,$2, $3); }
+  : TK_ARROBA TK_IDENTIFICADOR tipos  { $$ = new FieldExpression(@1.first_line, @1.first_column,$2, $3); }
 ;
+
 
 ddl
   :crearTabla { $$ = $1; }
@@ -219,7 +226,7 @@ listaAtributosTabla
 ;
 
 atributoTabla
-  : TK_IDENTIFICADOR tipos { $$ = new FieldExpression(@1.first_line, @1.first_column,$1, $2); }
+  : TK_IDENTIFICADOR tipos            { $$ = new FieldExpression(@1.first_line, @1.first_column,$1, $2); }
   | TK_IDENTIFICADOR {$$ = $1; }
 ;
 

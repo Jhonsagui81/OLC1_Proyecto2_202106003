@@ -7,13 +7,13 @@ import { Type, Literal } from "../abstract/Return";
 export class aritmetica extends AbstractSQLExpression{
 
 
-    public valor: any;
-    public tipo: any;
+    public value: any;
+    public type: any;
 
     constructor(line:number, column:number, private exp1: LiteralExpression | id, private operador: string, private exp2: LiteralExpression | id ){
         super(line, column);
-        this.valor = null;    
-        this.tipo = null; 
+        this.value = null;    
+        this.type = null; 
 
     }
 
@@ -21,17 +21,18 @@ export class aritmetica extends AbstractSQLExpression{
         let izq = this.exp1.interpret(context);
         let der = this.exp2.interpret(context);
         
+        
         switch(this.operador){
             case '+':
-                if(izq.tipo == Type.INT && der.tipo == Type.INT){
-                    this.valor = izq.valor + der.valor;
-                    this.tipo = Type.INT;
+                if(izq.type == Type.INT && der.type == Type.INT){
+                    this.value = izq.value + der.value;
+                    this.type = Type.INT;
                     return this;
                 }
             case '*':
-                if(izq.tipo == Type.INT && der.tipo == Type.INT ){
-                    this.valor = izq.valor * der.valor;
-                    this.tipo = Type.INT
+                if(izq.type == Type.INT && der.type == Type.INT ){
+                    this.value = izq.value * der.value;
+                    this.type = Type.INT
                     return this; 
                 }
         }

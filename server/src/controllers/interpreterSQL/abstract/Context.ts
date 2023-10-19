@@ -3,6 +3,7 @@ import { Literal } from "./Return";
 import { Symbol } from "../bd/Symbol";
 import { Type } from "./Return";
 import { LiteralExpression } from "../terminal/LiteralExpression";
+import { FieldExpression } from "../terminal/FieldExpression";
 
 export class Context {
     //Estructura que permite alamacenar clave(nombretabla): valor(Una instancia de Table.ts) 
@@ -16,15 +17,56 @@ export class Context {
     }
 
     //Agregar Variables 
-    public add_symbol(id:string, valor: any){
-      let env: Context | null = this;
-      let symbol = new Symbol(valor.valor, id, valor.tipo);
+    public add_variable(id:string, valor:any){
+      let env: Context = this;
+      let symbol = new Symbol(null, id, valor);
+      if(!env.symbolTable.has(id.toLowerCase())){ //si esta variable no esta en la tabla
+        env.symbolTable.set(id.toLowerCase(), symbol); 
+        //funcion para mostrar variables
+        this.getVariables();
+
+      } else {
+        console.log("Error: la variable "+id+" Ya existe en el entorno");
+      }
+    }
+
+    // Asignacion de varias variables 
+    public add_varias_variables(variables: Literal[]){
+      let env:Context = this;
+      for(const elemento of variables){
+        if(!env.symbolTable.has(elemento.value.toLowerCase())){
+          let sym = new Symbol(null, elemento.value, elemento.type);
+          env.symbolTable.set(elemento.value.toLowerCase(), sym ); //variable agregada
+        }else{
+          console.log("Error: la variable Ya existe en el entorno");
+        }
+      }
+
+      this.getVariables();
+    }
+
+    //Declara una variable con un valor 
+    public add_variable_dato(id:string, valor: any){
+      let env: Context = this;
+      let symbol = new Symbol(valor.value, id, valor.tipy);
       if(!env.symbolTable.has(id.toLowerCase())){ //si esta variable no esta en la tabla
         env.symbolTable.set(id.toLowerCase(), symbol); 
         //funcion para mostrar variables
         this.getVariables();
       } else {
         console.log("Error la variable "+id+" Ya existe en el entorno");
+      }
+    }
+
+    //LE asiga un valor a la variable que este vacia 
+    public set_variable(id:string, valor: any){
+      let env: Context = this;
+      if(!env.symbolTable.has(id.toLowerCase())){
+        console.log("Esta variable no esta declarada en este ambito");
+      }else{
+        let aux = env.symbolTable.get(id.toLowerCase())!;
+        aux["valor"] = valor
+        this.getVariables();
       }
     }
 
