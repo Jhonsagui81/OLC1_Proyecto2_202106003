@@ -20,7 +20,6 @@ export class aritmetica extends AbstractSQLExpression{
     public interpret(context: Context) {
         let izq = this.exp1.interpret(context);
         let der = this.exp2.interpret(context);
-        console.log("Esto es lo que trae la variable tipo: "+izq.tipo);
         
         switch(this.operador){
             case '+':

@@ -194,7 +194,7 @@ export class Context {
         console.log(key);
         // imprimir el nombre de todos los campos
         console.log("Nombre de todos los campos: ");
-        value.fields.forEach((field) => {
+        value.tuples.forEach((field) => {
           console.log(field);
         });
       }
@@ -203,10 +203,20 @@ export class Context {
     //Mostrar varibles
     public getVariables(){
       let env: Context | null = this;
-      console.log("Variables almacenadas: ")
-      for (const [key, value] of env.symbolTable){
-        console.log(key+": "+value.valor);
+      // console.log("Variables almacenadas: ")
+      // for (const [key, value] of env.symbolTable){
+      //   console.log(key+": "+value.valor);
+      // }
+      let contador: number = 0
+      while(env.anterior != null){
+        console.log("Variables en el contexto  "+contador+": ")
+        for (const [key, value] of env.symbolTable){
+          console.log(key+": "+value.valor);
+        }
+        contador ++;
+          env = env?.anterior;
       }
+
     }
 
 }

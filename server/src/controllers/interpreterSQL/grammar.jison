@@ -116,6 +116,9 @@
   //DML
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
 
+  //bloques
+  const {bloque} = require('./nonterminal/Bloques/bloque');
+
   //Declaracion variables
   const {id} = require('./terminal/id');
   const {aritmetica} = require('./terminal/aritmetica');
@@ -146,31 +149,42 @@ ini
 ;
 
 instrucciones
-	: instrucciones instruccion 	{ $1.push($2); $$ = $1; }
-	| instruccion					{ $$ = [$1]; }
+	: instrucciones instruccion_global 	{ $1.push($2); $$ = $1; }
+	| instruccion_global					{ $$ = [$1]; }
 ;
 
-instruccion
-	: ddl   TK_PTCOMA       { $$ = $1; }
-	| dml   TK_PTCOMA       { $$ = $1; }
-  | funciones TK_PTCOMA   { $$ = $1; }
-  | metodos TK_PTCOMA     { $$ = $1; }
+instruccion_global
+	: ddl   TK_PTCOMA                     { $$ = $1; }
+	| dml   TK_PTCOMA                     { $$ = $1; }
+  | funciones TK_PTCOMA                 { $$ = $1; }
+  | metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
 //	| error TK_PTCOMA
   //	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
 ;
 
 bloques
-  : TK_BEGIN instrucci_local TK_END  { $$ = $2; }
+  : TK_BEGIN instrucciones_locales TK_END  { $$ = new bloque(@1.first_line, @1.first_column, $2); }
 ;
 
-//instrucciones_locales
-//  :instrucciones_locales instrucci_local   {  $$ = $1; $$.push($2); }
-//  |instrucci_local  { $$ = []; $$.push($1); }
-//;
+instrucciones_locales
+  :instrucciones_locales instrucci_local   {  $$ = $1; $$.push($2); }
+  |instrucci_local  { $$ = []; $$.push($1); }
+;
 
 instrucci_local
-  :TK_DECLARE atriutos_variables TK_DEFAULT exp TK_PTCOMA   { $$ = new declaracion(@1.first_line, @1.first_column,$2,$4); }
+  :bloques TK_PTCOMA                  { $$ = $1; }
+  |declaracion TK_PTCOMA              { $$ = $1; }
+  |dml TK_PTCOMA                      { $$ = $1; }
+  //|casteo
+  //|llamadas
+  //|nativas
+  //|sentencias_control
+  //|sebtencias_ciclicas
+;
+
+declaracion
+  :TK_DECLARE atriutos_variables TK_DEFAULT exp   { $$ = new declaracion(@1.first_line, @1.first_column,$2,$4); }
 ;
 
 atriutos_variables
