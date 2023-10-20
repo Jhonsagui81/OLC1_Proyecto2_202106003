@@ -70,6 +70,10 @@
 "insert"      return 'TK_INSERT';
 "into"        return 'TK_INTO';
 "values"      return 'TK_VALUES';
+"select"      return 'TK_SELECT';
+"as"          return 'TK_AS';
+"from"        return 'TK_FROM';
+"where"       return 'TK_WHERE';
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -116,6 +120,7 @@
 
   //DML
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
+  const {simple_select} = require('./nonterminal/dml/select/simple_select');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -190,8 +195,14 @@ instrucci_local
 declaracion
   :TK_DECLARE atriutos_variables TK_DEFAULT exp           { $$ = new declaracion(@1.first_line, @1.first_column, $2,$4); }
   |TK_DECLARE atriutos_variables                          { $$ = new una_variable(@1.first_line, @1.first_column, $2 ); }
+  //|TK_DECLARE lista_atributos_var                         { $$ = new varias_var(@1.first_line, @1.first_column, $2); }
   |TK_SET TK_ARROBA TK_IDENTIFICADOR TK_IGUALACION exp    { $$ = new set(@1.first_line, @1.first_column, $3, $5); }
 ;
+
+//lista_atributos_var
+//	: lista_atributos_var TK_COMA atriutos_variables { $$ = $1; $$.push($3);   }
+//  	| atriutos_variables { $$ = []; $$.push[$1]; }
+//;
 
 atriutos_variables
   : TK_ARROBA TK_IDENTIFICADOR tipos  { $$ = new FieldExpression(@1.first_line, @1.first_column,$2, $3); }
@@ -232,7 +243,25 @@ atributoTabla
 
 // DML
 dml
-  : insertar { $$ = $1; }
+  : insertar  { $$ = $1; }
+  | select    { $$ = $1; }
+;
+
+select
+  :TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR                                            { $$ = new simple_select(@1.first_line, @1.first_column, $2, $4 ); }
+  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR                                                    { $$ = new short_select();  }
+  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp         { $$ = new where_select();  }
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp { $$ = new where_select_column();}
+  //|tk_sele nativas 
+;
+
+lista_columnas
+  :lista_columnas TK_COMA TK_IDENTIFICADOR      { $$ = $1; $$.push($3); }
+  |TK_IDENTIFICADOR                             { $$ = []; $$.push($1); }
+;
+
+nativas
+  :TK_SELECT TK_ARROBA TK_IDENTIFICADOR TK_AS TK_IDENTIFICADOR       { $$ = new imprimir_Valor_var(); } 
 ;
 
 insertar
@@ -278,5 +307,17 @@ tipos
   | TK_TDATE        { $$ = Type.DATE; }
   | TK_TVARCHAR     { $$ = Type.VARCHAR; }
   | TK_TBOOLEAN     { $$ = Type.BOOLEAN; }
+;
+
+relacionales
+  :TK_IGUALACION        { $$ = $1; }
+  |TK_DIFERENCIACION    { $$ = $1; }
+  |TK_MENORQUE          { $$ = $1; }
+  |TK_MENORIGUAL        { $$ = $1; }
+  |TK_MAYORQUE          { $$ = $1; }
+  |TK_MAYORIGUAL        { $$ = $1; }
+  |TK_OR                { $$ = $1; }
+  |TK_AND               { $$ = $1; }
+  |TK_NOT               { $$ = $1; }
 ;
 

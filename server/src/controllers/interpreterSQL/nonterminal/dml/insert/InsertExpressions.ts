@@ -9,7 +9,7 @@ export class InsertExpression extends AbstractSQLExpression {
     constructor( line: number, column: number,private name: String,
       private fields: [],private values: LiteralExpression[]) { //LiteralExpresion porque debe retornar tipas
       super(line, column);
-  
+        //nombre_tabla, lista_ids,  lista_valores
     }
   
     public interpret(context : Context){

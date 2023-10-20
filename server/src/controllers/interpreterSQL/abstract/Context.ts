@@ -105,17 +105,13 @@ export class Context {
       // obtener la tabla
       const table = contextGlobal.tables.get(id.toLowerCase())!; //obtiene la tabla
       const fields_ = table.fields; //de la tabla extraida se hace una copia de sus columnas
-
       const newTuple: { [key: string]: any } = {}; // Se crea un nuevo objeto clave, valor
-    
       fields_.forEach((literal) => { //Recoore todas las columnas de la tabla
         newTuple[literal.value] = null; //y en la tupla se guardan el valor como su clave
       });
-
       fields.forEach((field, index) => { // recorre las columnas traidas del interprete
         newTuple[field]= values[index]; // y en la nuva tupla se buscan por claves y se le asigana el tipo como valor 
       });
-
       // insertar la tupla en la tabla
       table.tuples.push(newTuple);
       this.getTables(); //imprime las tablas almacenadas
@@ -123,9 +119,28 @@ export class Context {
     } else {
       console.log("Error: la tabla no existe");
     }
-
   }
 
+  //Simple_SELECT
+  public simple_select(columns: [], name: string){
+    const contextGlobal = this.getGlobal();
+    console.log("\nResultado de la clausula SELECT")
+    console.log("-----------------------------------------------");
+    if(contextGlobal.tables.has(name.toLowerCase())) {
+      const table = contextGlobal.tables.get(name.toLowerCase())!;
+      const nesdw = table.tuples;
+      table.tuples.forEach((objeto) =>{
+        const valores = Object.values(objeto);
+
+        columns.forEach((clave) => {
+          const indice = Object.keys(objeto).indexOf(clave);
+          console.log(`${clave}: ${valores[indice]["value"]}`);
+          
+        });
+        console.log("-----------------------------------------------");
+      });
+    }
+  }
     // agregar una columna a la tabla
     public add_column(id: string, field: Literal) { //nombre_tabla, object Tabla.ts
       // verificar el ambito
