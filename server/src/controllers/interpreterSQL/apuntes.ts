@@ -6,3 +6,5 @@ const {bloque} = require('./nonterminal/Bloques/bloque');
 const {una_variable} = require('./nonterminal/declara_variables/unica');
 const {varias_var} = require('./nonterminal/declara_variables/varias');
 const {set} = require('./nonterminal/declara_variables/set');
+const {simple_select} = require('./nonterminal/dml/select/simple_select');
+const {short_select} = require('./nonterminal/dml/select/short_select');

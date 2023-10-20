@@ -150,7 +150,7 @@ case 32:
  this.$ = new simple_select(_$[$0-3].first_line, _$[$0-3].first_column, $$[$0-2], $$[$0] ); 
 break;
 case 33:
- this.$ = new short_select();  
+ this.$ = new short_select(_$[$0-3].first_line, _$[$0-3].first_column, $$[$0]);  
 break;
 case 34:
  this.$ = new where_select();  
@@ -394,6 +394,7 @@ parse: function parse(input) {
   //DML
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
   const {simple_select} = require('./nonterminal/dml/select/simple_select');
+  const {short_select} = require('./nonterminal/dml/select/short_select');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');

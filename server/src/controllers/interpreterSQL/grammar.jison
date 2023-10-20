@@ -121,6 +121,7 @@
   //DML
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
   const {simple_select} = require('./nonterminal/dml/select/simple_select');
+  const {short_select} = require('./nonterminal/dml/select/short_select');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -249,7 +250,7 @@ dml
 
 select
   :TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR                                            { $$ = new simple_select(@1.first_line, @1.first_column, $2, $4 ); }
-  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR                                                    { $$ = new short_select();  }
+  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR                                                    { $$ = new short_select(@1.first_line, @1.first_column, $4);  }
   |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp         { $$ = new where_select();  }
   |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp { $$ = new where_select_column();}
   //|tk_sele nativas 

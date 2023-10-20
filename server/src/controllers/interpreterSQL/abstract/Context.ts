@@ -128,7 +128,6 @@ export class Context {
     console.log("-----------------------------------------------");
     if(contextGlobal.tables.has(name.toLowerCase())) {
       const table = contextGlobal.tables.get(name.toLowerCase())!;
-      const nesdw = table.tuples;
       table.tuples.forEach((objeto) =>{
         const valores = Object.values(objeto);
 
@@ -137,6 +136,26 @@ export class Context {
           console.log(`${clave}: ${valores[indice]["value"]}`);
           
         });
+        console.log("-----------------------------------------------");
+      });
+    }
+  }
+
+  //short_SELECT
+  public short_select(name: string){
+    const contextGlobal = this.getGlobal();
+    console.log("\nResultado de la clausula SELECT")
+    console.log("-----------------------------------------------");
+    if(contextGlobal.tables.has(name.toLowerCase())) {
+      const table = contextGlobal.tables.get(name.toLowerCase())!;
+      const nesdw = table.fields;
+      table.tuples.forEach((objeto) =>{
+        const valores = Object.values(objeto);
+
+        nesdw.forEach((literal) => {
+          const indice = Object.keys(objeto).indexOf(literal.value);
+          console.log(`${literal.value}: ${valores[indice]["value"]}`);
+        })
         console.log("-----------------------------------------------");
       });
     }
