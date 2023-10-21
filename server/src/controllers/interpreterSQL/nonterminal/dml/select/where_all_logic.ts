@@ -22,7 +22,7 @@ export class where_all_logic extends AbstractSQLExpression {
             let exp1 = this.expre1.interpret(context);  //retorno value, type
             let exp2 = this.expre2.interpret(context);
 
-
+            console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+this.name_table+" WHERE "+this.condicion1+" "+this.oper1+" "+exp1.value+" "+this.logic+" "+this.condicion2 + " "+this.oper2+" "+exp2.value+"\n")
             context.where_all_logic(this.name_table, this.condicion1, this.oper1, exp1.value, this.logic, this.condicion2, this.oper2, exp2.value);
             //context.where_all_rela(this.name_table, this.name_colum_condicion, this.operador, exp.value);
            // context.while_all(this.name_table, this.name_colum_condicion, this.operador, )

@@ -168,7 +168,7 @@ case 38:
  this.$ = new where_all_not(_$[$0-8].first_line, _$[$0-8].first_column, $$[$0-5], $$[$0-2], $$[$0-1], $$[$0] );  
 break;
 case 39:
- this.$ = new where_column_not();  
+ this.$ = new where_column_not(_$[$0-8].first_line, _$[$0-8].first_column, $$[$0-7], $$[$0-5], $$[$0-2], $$[$0-1], $$[$0] );  
 break;
 case 40:
  this.$ = $$[$0-2]; this.$.push($$[$0]); 
@@ -415,6 +415,7 @@ parse: function parse(input) {
   const {where_all_logic} = require('./nonterminal/dml/select/where_all_logic');
   const {where_colum_logic} = require('./nonterminal/dml/select/where_colum_logic');
   const {where_all_not} = require('./nonterminal/dml/select/where_all_not');
+  const {where_column_not} = require('./nonterminal/dml/select/where_column_not');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');

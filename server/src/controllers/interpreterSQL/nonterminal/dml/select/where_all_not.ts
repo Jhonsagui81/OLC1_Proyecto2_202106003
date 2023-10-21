@@ -40,7 +40,7 @@ export class where_all_not extends AbstractSQLExpression {
                     break;
             }
 
-            
+            console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+this.name_table+" WHERE NOT "+this.name_colum_condicion+" "+this.operador+" "+exp.value+"\n");
             context.where_all_rela(this.name_table, this.name_colum_condicion, this.oper_verdadero, exp.value);
            // context.while_all(this.name_table, this.name_colum_condicion, this.operador, )
 

@@ -125,6 +125,7 @@
   const {where_all_logic} = require('./nonterminal/dml/select/where_all_logic');
   const {where_colum_logic} = require('./nonterminal/dml/select/where_colum_logic');
   const {where_all_not} = require('./nonterminal/dml/select/where_all_not');
+  const {where_column_not} = require('./nonterminal/dml/select/where_column_not');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -258,14 +259,16 @@ select
   // TK_where TK_PARIZQ select TK_PARDER relacionales exp
   // TK_where TK_IDENTIFICADOR relacionales TK_PARIZQ select TK_PARDER
   // TK_where TK_PARIZQ select TK_PARDER relacionales TK_PARIZQ select TK_PARDER
-  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp   { $$ = new where_column_relaci(@1.first_line, @1.first_column, $2, $4, $6, $7, $8 ); }
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp   
+  { $$ = new where_column_relaci(@1.first_line, @1.first_column, $2, $4, $6, $7, $8 ); }
   |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp
   { $$ = new where_all_logic(@1.first_line, @1.first_column, $4, $6, $7, $8, $9, $10, $11, $12); }
   |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp      
   { $$ = new where_colum_logic(@1.first_line, @1.first_column, $2, $4, $6, $7, $8, $9, $10, $11, $12  ); }
   |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp    
   { $$ = new where_all_not(@1.first_line, @1.first_column, $4, $7, $8, $9 );  }
-  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp    { $$ = new where_column_not();  }
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp   
+  { $$ = new where_column_not(@1.first_line, @1.first_column, $2, $4, $7, $8, $9 );  }
 
 ;
 

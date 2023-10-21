@@ -18,6 +18,7 @@ export class where_column_relaci extends AbstractSQLExpression {
 
     public interpret(context: Context) {
         let exp = this.expre.interpret(context);
+        console.log("\nRESULTADO DE CONSULTA SELECT [...] FROM "+this.name_table+" WHERE "+this.name_colum_condicion+" "+this.operador+" "+exp.value+"\n");
         context.where_column_rela(this.columnas, this.name_table, this.name_colum_condicion, this.operador, exp.value);
     }
 

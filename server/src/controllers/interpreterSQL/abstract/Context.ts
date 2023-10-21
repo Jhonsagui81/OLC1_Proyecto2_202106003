@@ -124,8 +124,7 @@ export class Context {
   //Simple_SELECT
   public simple_select(columns: [], name: string){
     const contextGlobal = this.getGlobal();
-    console.log("\nResultado de la clausula SELECT")
-    console.log("-----------------------------------------------");
+
     if(contextGlobal.tables.has(name.toLowerCase())) {
       const table = contextGlobal.tables.get(name.toLowerCase())!;
       table.tuples.forEach((objeto) =>{
@@ -144,7 +143,7 @@ export class Context {
   //short_SELECT
   public short_select(name: string){
     const contextGlobal = this.getGlobal();
-    console.log("\nResultado de la clausula SELECT")
+
     console.log("-----------------------------------------------");
     if(contextGlobal.tables.has(name.toLowerCase())) {
       const table = contextGlobal.tables.get(name.toLowerCase())!;
@@ -165,7 +164,6 @@ export class Context {
     const contexGlobal = this.getGlobal();
     if(contexGlobal.tables.has(id.toLowerCase())) {
       const table = contexGlobal.tables.get(id.toLowerCase())!;
-      console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor+"\n")
       const result = this.relacionales(table,column,colu_condi,opera,valor);
       // lista con resultados => iterarla 
       result.forEach((literal) =>{
@@ -186,7 +184,6 @@ export class Context {
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
       const nesdw = table.fields.map(literal => literal.value);
-      console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
       const resuldt = this.relacionales(table, nesdw, column, opera, valor); 
       //lista con resultados -> iterarrla 
 
@@ -262,7 +259,6 @@ export class Context {
       
     }
   }
-  //SELECT [] WHERE realaci LOGIC relacion
 
   public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
     const tuples: { [key: string]: any }[] = []; 
