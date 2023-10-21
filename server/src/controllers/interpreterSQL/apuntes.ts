@@ -12,3 +12,4 @@ const {where_all_relaci} = require('./nonterminal/dml/select/where_select');
 const {where_column_relaci} = require('./nonterminal/dml/select/where_column_relaci');
 const {where_all_logic} = require('./nonterminal/dml/select/where_all_logic');
 const {where_colum_logic} = require('./nonterminal/dml/select/where_colum_logic');
+const {where_all_not} = require('./nonterminal/dml/select/where_all_not');
