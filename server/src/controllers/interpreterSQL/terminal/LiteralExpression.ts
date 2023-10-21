@@ -30,6 +30,20 @@ export class LiteralExpression extends AbstractSQLExpression { //herencia
         this.value = new Date(this.value);
         this.type = Type.DATE;
         break;
+      case Type.VARCHAR:
+        
+        const regex = /^\"/g;
+        const regex2 = /\"$/g;
+
+        //Quitar comillas al inicio y al final
+        this.value = this.value.replace(regex, "").replace(regex2, "")
+
+        //Quitar caracteres de escape /n /t // /"
+        let string = this.value.replace(/\\n/g, "\n").replace(/\\t/g, "\t").replace(/\\"/g, "\"").replace(/\\/g, "\\");
+        console.log("ESte varachar resul: "+string)
+        this.value = string;
+        this.type = Type.VARCHAR;
+        break;
       case Type.BOOLEAN:
         if (this.value == "true") {
           this.value = true;
@@ -56,6 +70,7 @@ export class LiteralExpression extends AbstractSQLExpression { //herencia
         
     }
     return this; 
+
   }
 
 

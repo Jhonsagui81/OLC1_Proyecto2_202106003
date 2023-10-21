@@ -7,7 +7,7 @@ export class bloque extends AbstractSQLExpression{
         super(line, column);
     }
     
-    public interpret(context: Context) {
+    public interpret(context: Context) { //contexto global
         let NuevoContexto = new Context(context);
         
         for (const exp of this.expresion){

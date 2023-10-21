@@ -28,9 +28,7 @@
 "="                 return 'TK_IGUALACION';
 "!="                return 'TK_DIFERENCIACION';
 "<"                 return 'TK_MENORQUE';
-"<="                return 'TK_MENORIGUAL';
 ">"                 return 'TK_MAYORQUE';
-">="                return 'TK_MAYORIGUAL';
 "@"                 return 'TK_ARROBA';
 
 // -------> Operadores aritmeticos
@@ -122,6 +120,7 @@
   const {InsertExpression} = require('./nonterminal/dml/insert/InsertExpressions');
   const {simple_select} = require('./nonterminal/dml/select/simple_select');
   const {short_select} = require('./nonterminal/dml/select/short_select');
+  const {where_all_relaci} = require('./nonterminal/dml/select/where_select');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -251,9 +250,14 @@ dml
 select
   :TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR                                            { $$ = new simple_select(@1.first_line, @1.first_column, $2, $4 ); }
   |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR                                                    { $$ = new short_select(@1.first_line, @1.first_column, $4);  }
-  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp         { $$ = new where_select();  }
-  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp { $$ = new where_select_column();}
-  //|tk_sele nativas 
+  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp         { $$ = new where_all_relaci(@1.first_line, @1.first_column, $4, $6, $7, $8);  }
+  // TK_where TK_PARIZQ select TK_PARDER relacionales exp
+  // TK_where TK_IDENTIFICADOR relacionales TK_PARIZQ select TK_PARDER
+  // TK_where TK_PARIZQ select TK_PARDER relacionales TK_PARIZQ select TK_PARDER
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp { $$ = new where_column_relaci(); }
+  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR logicos exp         { $$ = new where_all_logic(); }
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR logicos exp { $$ = new where_column_logic(); }
+  //|TK_SELECT lista_columnas
 ;
 
 lista_columnas
@@ -314,10 +318,13 @@ relacionales
   :TK_IGUALACION        { $$ = $1; }
   |TK_DIFERENCIACION    { $$ = $1; }
   |TK_MENORQUE          { $$ = $1; }
-  |TK_MENORIGUAL        { $$ = $1; }
+  |TK_MENORQUE TK_IGUALACION        { $$ = $1+$2; }
   |TK_MAYORQUE          { $$ = $1; }
-  |TK_MAYORIGUAL        { $$ = $1; }
-  |TK_OR                { $$ = $1; }
+  |TK_MAYORQUE TK_IGUALACION        { $$ = $1+$2; }
+;
+
+logicos
+  :TK_OR                { $$ = $1; }
   |TK_AND               { $$ = $1; }
   |TK_NOT               { $$ = $1; }
 ;
