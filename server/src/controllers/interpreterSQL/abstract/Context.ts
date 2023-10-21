@@ -255,10 +255,8 @@ CorreoElectronico: marvin@example.com
           console.log(new_list);
           break;
         case 'OR':
-          const new_lista = result1.filter(objeto1 => {
-            return result2.some(objeto2 => {
-              return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) || objeto2[clave] == objeto1[clave]);
-            });
+          const new_lista = result1.concat(result2).filter((objeto, indice, lista) => {
+            return lista.findIndex(obj => JSON.stringify(obj) === JSON.stringify(objeto)) === indice;
           });
           console.log(new_lista);
           break;
