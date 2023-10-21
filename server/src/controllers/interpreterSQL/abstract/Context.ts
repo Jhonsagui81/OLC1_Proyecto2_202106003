@@ -166,150 +166,88 @@ export class Context {
     if(contexGlobal.tables.has(id.toLowerCase())) {
       const table = contexGlobal.tables.get(id.toLowerCase())!;
       const encabezado = table.fields;
-      table.tuples.forEach((objeto) => {
-        //tupla = [{clave: {valor}}, {}]
-        //tupla = [{id_cliente: {line: 5, value: 2, type: 0}, Nombre: {}, correo: {}}, {}]
-        const valores = Object.values(objeto); //obtengo los valores de la tupla en iteracion [ {line, colu, value: x}, {line, colu, value: x}, {line, colu, value: x} ]
-      
-        //indice de la columna condicion 
-        const indice_condici = Object.keys(objeto).indexOf(colu_condi); 
-            switch(opera){
-              case '=':   
-                if(valores[indice_condici]["value"] == valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
-                  column.forEach((filtro_colum) => {
-                    const indice = Object.keys(objeto).indexOf(filtro_colum);
-                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;
-              case '!=':   
-                if(valores[indice_condici]["value"] != valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
-                  column.forEach((filtro_colum) => {
-                    const indice = Object.keys(objeto).indexOf(filtro_colum);
-                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;
-              case '<':   
-                if(valores[indice_condici]["value"] < valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
-                  column.forEach((filtro_colum) => {
-                    const indice = Object.keys(objeto).indexOf(filtro_colum);
-                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;
-              case '<=':   
-                if(valores[indice_condici]["value"] <= valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
-                  column.forEach((filtro_colum) => {
-                    const indice = Object.keys(objeto).indexOf(filtro_colum);
-                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;
-              case '>':   
-                if(valores[indice_condici]["value"] > valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
-                  column.forEach((filtro_colum) => {
-                    const indice = Object.keys(objeto).indexOf(filtro_colum);
-                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;  
-              case '>=':   
-                if(valores[indice_condici]["value"] >= valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
-                  column.forEach((filtro_colum) => {
-                    const indice = Object.keys(objeto).indexOf(filtro_colum);
-                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;
-            }
-
-        
-      });
+      console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor+"\n")
+      this.relacionales(id,table,column,colu_condi,opera,valor);
     }
+  }
+
+
+  public relacionales(id:string,tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ){
+    tabla.tuples.forEach((objeto) =>{
+      const valores = Object.values(objeto);
+      
+          //obtiene indice columna WHERE condicion 
+          const indice_condici = Object.keys(objeto).indexOf(colum_cond); 
+        
+          switch(opera){
+            case '=':   
+              if(valores[indice_condici]["value"] == valor){
+                nesdw.forEach((lit) => {
+                  const indice = Object.keys(objeto).indexOf(lit);  
+                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                });
+                console.log("-------------------------------------\n");
+              }
+              break;
+            case '!=':
+              if(valores[indice_condici]["value"] != valor){
+                nesdw.forEach((lit) => {
+                  const indice = Object.keys(objeto).indexOf(lit);  
+                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                });
+                console.log("-------------------------------------\n");
+              }
+              break;
+            case '<':
+              if(valores[indice_condici]["value"] < valor){
+                nesdw.forEach((lit) => {
+                  const indice = Object.keys(objeto).indexOf(lit);  
+                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                });
+                console.log("-------------------------------------\n");
+              }
+              break;
+            case '<=':
+              if(valores[indice_condici]["value"] <= valor){
+                nesdw.forEach((lit) => {
+                  const indice = Object.keys(objeto).indexOf(lit);  
+                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                });
+                console.log("-------------------------------------\n");
+              }
+              break;
+            case '>':
+              if(valores[indice_condici]["value"] > valor){
+                nesdw.forEach((lit) => {
+                  const indice = Object.keys(objeto).indexOf(lit);  
+                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                });
+                console.log("-------------------------------------\n");
+              }
+              break;
+            case '>=':
+              if(valores[indice_condici]["value"] >= valor){
+                nesdw.forEach((lit) => {
+                  const indice = Object.keys(objeto).indexOf(lit);  
+                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                });
+                console.log("-------------------------------------\n");
+              }
+              break;
+          } //finaliza switch
+        
+      
+    });
   }
   //SELECT * WHERE RELACIONALES
   public where_all_rela(id: string, column: string, opera: string, valor: any){
     const contextGlobal = this.getGlobal();
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
-      const nesdw = table.fields;
-      table.tuples.forEach((objeto) =>{
-        const valores = Object.values(objeto);
-        
-            //obtiene indice columna WHERE condicion 
-            const indice_condici = Object.keys(objeto).indexOf(column); 
-          
-            switch(opera){
-              case '=':   
-                if(valores[indice_condici]["value"] == valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  nesdw.forEach((lit) => {
-                    const indice = Object.keys(objeto).indexOf(lit.value);  
-                    console.log(`${lit.value}: ${valores[indice]["value"]}`);
-                  });
-                }
-                break;
-              case '!=':
-                if(valores[indice_condici]["value"] != valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  nesdw.forEach((lit) => {
-                    const indice = Object.keys(objeto).indexOf(lit.value);  
-                    console.log(`${lit.value}: ${valores[indice]["value"]}`);
-                  });
-                  
-                }
-                break;
-              case '<':
-                if(valores[indice_condici]["value"] < valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  nesdw.forEach((lit) => {
-                    const indice = Object.keys(objeto).indexOf(lit.value);  
-                    console.log(`${lit.value}: ${valores[indice]["value"]}`);
-                  });
-                  
-                }
-                break;
-              case '<=':
-                if(valores[indice_condici]["value"] <= valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  nesdw.forEach((lit) => {
-                    const indice = Object.keys(objeto).indexOf(lit.value);  
-                    console.log(`${lit.value}: ${valores[indice]["value"]}`);
-                  });
-                  
-                }
-                break;
-              case '>':
-                if(valores[indice_condici]["value"] > valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  nesdw.forEach((lit) => {
-                    const indice = Object.keys(objeto).indexOf(lit.value);  
-                    console.log(`${lit.value}: ${valores[indice]["value"]}`);
-                  });
-                  
-                }
-                break;
-              case '>=':
-                if(valores[indice_condici]["value"] >= valor){
-                  console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  nesdw.forEach((lit) => {
-                    const indice = Object.keys(objeto).indexOf(lit.value);  
-                    console.log(`${lit.value}: ${valores[indice]["value"]}`);
-                  });
-                  
-                }
-                break;
-            } //finaliza switch
-          
-        
-      });
+      const nesdw = table.fields.map(literal => literal.value);
+      console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+      this.relacionales(id,table, nesdw, column, opera, valor);
+      
     }
   }
     // agregar una columna a la tabla
