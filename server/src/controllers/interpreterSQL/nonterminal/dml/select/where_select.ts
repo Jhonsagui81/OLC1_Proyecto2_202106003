@@ -15,9 +15,8 @@ export class where_all_relaci extends AbstractSQLExpression {
         }
 
         public interpret(context: Context) {
-            console.log("ENTRO xd")
             let exp = this.expre.interpret(context);  //retorno value, type
-            console.log("Esto trae exp: "+exp.value);
+            
             context.where_all_rela(this.name_table, this.name_colum_condicion, this.operador, exp.value);
            // context.while_all(this.name_table, this.name_colum_condicion, this.operador, )
 

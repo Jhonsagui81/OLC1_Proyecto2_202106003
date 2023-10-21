@@ -156,7 +156,7 @@ case 34:
  this.$ = new where_all_relaci(_$[$0-7].first_line, _$[$0-7].first_column, $$[$0-4], $$[$0-2], $$[$0-1], $$[$0]);  
 break;
 case 35:
- this.$ = new where_column_relaci(); 
+ this.$ = new where_column_relaci(_$[$0-7].first_line, _$[$0-7].first_column, $$[$0-6], $$[$0-4], $$[$0-2], $$[$0-1], $$[$0] ); 
 break;
 case 36:
  this.$ = new where_all_logic(); 
@@ -405,6 +405,7 @@ parse: function parse(input) {
   const {simple_select} = require('./nonterminal/dml/select/simple_select');
   const {short_select} = require('./nonterminal/dml/select/short_select');
   const {where_all_relaci} = require('./nonterminal/dml/select/where_select');
+  const {where_column_relaci} = require('./nonterminal/dml/select/where_column_relaci');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');

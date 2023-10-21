@@ -160,20 +160,89 @@ export class Context {
       });
     }
   }
+  // SELECT [] WHERE REALACIONALES
+  public where_column_rela(column:[], id: string, colu_condi:string, opera: string, valor:any){
+    const contexGlobal = this.getGlobal();
+    if(contexGlobal.tables.has(id.toLowerCase())) {
+      const table = contexGlobal.tables.get(id.toLowerCase())!;
+      const encabezado = table.fields;
+      table.tuples.forEach((objeto) => {
+        //tupla = [{clave: {valor}}, {}]
+        //tupla = [{id_cliente: {line: 5, value: 2, type: 0}, Nombre: {}, correo: {}}, {}]
+        const valores = Object.values(objeto); //obtengo los valores de la tupla en iteracion [ {line, colu, value: x}, {line, colu, value: x}, {line, colu, value: x} ]
+      
+        //indice de la columna condicion 
+        const indice_condici = Object.keys(objeto).indexOf(colu_condi); 
+            switch(opera){
+              case '=':   
+                if(valores[indice_condici]["value"] == valor){
+                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
+                  column.forEach((filtro_colum) => {
+                    const indice = Object.keys(objeto).indexOf(filtro_colum);
+                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
+                  });
+                }
+                break;
+              case '!=':   
+                if(valores[indice_condici]["value"] != valor){
+                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
+                  column.forEach((filtro_colum) => {
+                    const indice = Object.keys(objeto).indexOf(filtro_colum);
+                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
+                  });
+                }
+                break;
+              case '<':   
+                if(valores[indice_condici]["value"] < valor){
+                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
+                  column.forEach((filtro_colum) => {
+                    const indice = Object.keys(objeto).indexOf(filtro_colum);
+                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
+                  });
+                }
+                break;
+              case '<=':   
+                if(valores[indice_condici]["value"] <= valor){
+                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
+                  column.forEach((filtro_colum) => {
+                    const indice = Object.keys(objeto).indexOf(filtro_colum);
+                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
+                  });
+                }
+                break;
+              case '>':   
+                if(valores[indice_condici]["value"] > valor){
+                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
+                  column.forEach((filtro_colum) => {
+                    const indice = Object.keys(objeto).indexOf(filtro_colum);
+                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
+                  });
+                }
+                break;  
+              case '>=':   
+                if(valores[indice_condici]["value"] >= valor){
+                  console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor)
+                  column.forEach((filtro_colum) => {
+                    const indice = Object.keys(objeto).indexOf(filtro_colum);
+                    console.log(`${filtro_colum}: ${valores[indice]["value"]}`);
+                  });
+                }
+                break;
+            }
 
-  //SELECT WHERE RELACIONALES
+        
+      });
+    }
+  }
+  //SELECT * WHERE RELACIONALES
   public where_all_rela(id: string, column: string, opera: string, valor: any){
     const contextGlobal = this.getGlobal();
-    let bandera1: boolean = false;
-    let bandera2: boolean = false;
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
       const nesdw = table.fields;
       table.tuples.forEach((objeto) =>{
         const valores = Object.values(objeto);
         
-          if(bandera1 == false){
-            
             //obtiene indice columna WHERE condicion 
             const indice_condici = Object.keys(objeto).indexOf(column); 
           
@@ -181,7 +250,6 @@ export class Context {
               case '=':   
                 if(valores[indice_condici]["value"] == valor){
                   console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  
                   nesdw.forEach((lit) => {
                     const indice = Object.keys(objeto).indexOf(lit.value);  
                     console.log(`${lit.value}: ${valores[indice]["value"]}`);
@@ -191,7 +259,6 @@ export class Context {
               case '!=':
                 if(valores[indice_condici]["value"] != valor){
                   console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor)
-                  
                   nesdw.forEach((lit) => {
                     const indice = Object.keys(objeto).indexOf(lit.value);  
                     console.log(`${lit.value}: ${valores[indice]["value"]}`);
@@ -240,9 +307,7 @@ export class Context {
                 }
                 break;
             } //finaliza switch
-          }else{
-            return;
-          }
+          
         
       });
     }
