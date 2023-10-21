@@ -10,3 +10,4 @@ const {simple_select} = require('./nonterminal/dml/select/simple_select');
 const {short_select} = require('./nonterminal/dml/select/short_select');
 const {where_all_relaci} = require('./nonterminal/dml/select/where_select');
 const {where_column_relaci} = require('./nonterminal/dml/select/where_column_relaci');
+const {where_all_logic} = require('./nonterminal/dml/select/where_all_logic');

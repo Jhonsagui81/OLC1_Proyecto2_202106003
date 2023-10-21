@@ -165,14 +165,110 @@ export class Context {
     const contexGlobal = this.getGlobal();
     if(contexGlobal.tables.has(id.toLowerCase())) {
       const table = contexGlobal.tables.get(id.toLowerCase())!;
-      const encabezado = table.fields;
       console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+id+" WHERE "+colu_condi+" "+opera+" "+valor+"\n")
-      this.relacionales(id,table,column,colu_condi,opera,valor);
+      const result = this.relacionales(table,column,colu_condi,opera,valor);
+      // lista con resultados => iterarla 
+      result.forEach((literal) =>{
+        const valores = Object.values(literal);
+        column.forEach((lit)=>{
+          const indice = Object.keys(literal).indexOf(lit);
+          console.log(`${lit}: ${valores[indice]}`);
+        });
+        console.log("-----------------------------------------")
+      });
+      
     }
   }
 
+  //SELECT * WHERE RELACIONALES
+  public where_all_rela(id: string, column: string, opera: string, valor: any){
+    const contextGlobal = this.getGlobal();
+    if(contextGlobal.tables.has(id.toLowerCase())) {
+      const table = contextGlobal.tables.get(id.toLowerCase())!;
+      const nesdw = table.fields.map(literal => literal.value);
+      console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+      const resuldt = this.relacionales(table, nesdw, column, opera, valor); 
+      //lista con resultados -> iterarrla 
 
-  public relacionales(id:string,tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ){
+      resuldt.forEach((literal) =>{
+        const valores = Object.values(literal);
+        nesdw.forEach((lit)=>{
+          const indice = Object.keys(literal).indexOf(lit);
+          console.log(`${lit}: ${valores[indice]}`);
+        });
+        console.log("-----------------------------------------")
+      });
+      
+    }
+  }
+
+  //SELECT * WHERE relacion LOGIC relacion
+  public where_all_logic(id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
+    const contextGlobal = this.getGlobal();
+    if(contextGlobal.tables.has(id.toLowerCase())) {
+      const table = contextGlobal.tables.get(id.toLowerCase())!;
+      const nesdw = table.fields.map(literal => literal.value);
+      //console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+      const result1 = this.relacionales(table, nesdw, cond1, oper1, valor1);
+      const result2 = this.relacionales(table, nesdw, cond2, oper2, valor2);
+      
+      /*  LISTA 1
+ID_Cliente: 3
+Nombre: Marvin Larios
+CorreoElectronico: marvin@example.com
+-------------------------------g----------
+ID_Cliente: 4
+Nombre: Leticia Chay
+CorreoElectronico: Lety@example.com
+-------------------------------g----------
+      */
+
+      /* LISTA 2
+ID_Cliente: 3
+Nombre: Marvin Larios
+CorreoElectronico: marvin@example.com
+-------------------------------g----------      
+      */
+
+      switch(logic){
+        case 'AND':
+          // result1.forEach((objeto1) =>{
+          //   const valores = Object.values(objeto1);
+          //   //otro ciclo para imprimir cada una de las columnas 
+          //   nesdw.forEach((encabeza) => {
+          //     const indice = Object.keys(objeto1).indexOf(encabeza);
+
+          //     //Validacion de and -> recorrer la segunda lista de resultado
+          //     result2.forEach((objeto2) =>{
+          //       const valores2 = Object.values(objeto2);
+                
+          //     });
+
+          //   });
+          // });
+          const new_list = result1.filter(objeto1 => {
+            return result2.some(objeto2 => {
+              return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) && objeto2[clave] == objeto1[clave]);
+            });
+          });
+
+          console.log(new_list);
+          break;
+        case 'OR':
+          const new_lista = result1.filter(objeto1 => {
+            return result2.some(objeto2 => {
+              return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) || objeto2[clave] == objeto1[clave]);
+            });
+          });
+          console.log(new_lista);
+          break;
+      }
+      
+    }
+  }
+
+  public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
+    const tuples: { [key: string]: any }[] = []; 
     tabla.tuples.forEach((objeto) =>{
       const valores = Object.values(objeto);
       
@@ -182,73 +278,87 @@ export class Context {
           switch(opera){
             case '=':   
               if(valores[indice_condici]["value"] == valor){
+                const result: {[key: string]: any} = {};
                 nesdw.forEach((lit) => {
-                  const indice = Object.keys(objeto).indexOf(lit);  
-                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                  const indice = Object.keys(objeto).indexOf(lit); 
+                  result[lit] = valores[indice]["value"];
+                  // console.log(`${lit}: ${valores[indice]["value"]}`);
                 });
-                console.log("-------------------------------------\n");
+                // console.log("-------------------------------------\n");
+                tuples.push(result);
+                
               }
               break;
             case '!=':
               if(valores[indice_condici]["value"] != valor){
+                const result: {[clave:string]:any} = {};
                 nesdw.forEach((lit) => {
                   const indice = Object.keys(objeto).indexOf(lit);  
-                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                  result[lit] = valores[indice]["value"];
+                  //console.log(`${lit}: ${valores[indice]["value"]}`);
                 });
-                console.log("-------------------------------------\n");
+                //console.log("-------------------------------------\n");
+                tuples.push(result);
+                
               }
               break;
             case '<':
               if(valores[indice_condici]["value"] < valor){
+                const result: {[clave:string]:any} = {};
                 nesdw.forEach((lit) => {
                   const indice = Object.keys(objeto).indexOf(lit);  
-                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                  result[lit] = valores[indice]["value"];
+                  // console.log(`${lit}: ${valores[indice]["value"]}`);
                 });
-                console.log("-------------------------------------\n");
+                // console.log("-------------------------------------\n");
+                tuples.push(result);
+                
               }
               break;
             case '<=':
               if(valores[indice_condici]["value"] <= valor){
+                const result: {[clave:string]:any} = {};
                 nesdw.forEach((lit) => {
                   const indice = Object.keys(objeto).indexOf(lit);  
-                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                  result[lit] = valores[indice]["value"];
+                  // console.log(`${lit}: ${valores[indice]["value"]}`);
                 });
-                console.log("-------------------------------------\n");
+                // console.log("-------------------------------------\n");
+                tuples.push(result);
+                
               }
               break;
             case '>':
               if(valores[indice_condici]["value"] > valor){
+                const result: {[clave:string]:any} = {};
                 nesdw.forEach((lit) => {
                   const indice = Object.keys(objeto).indexOf(lit);  
-                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                  result[lit] = valores[indice]["value"];
+                  // console.log(`${lit}: ${valores[indice]["value"]}`);
                 });
-                console.log("-------------------------------------\n");
+                // console.log("-------------------------------------\n");
+                tuples.push(result);
+                
               }
               break;
             case '>=':
               if(valores[indice_condici]["value"] >= valor){
+                const result: {[clave:string]:any} = {};
                 nesdw.forEach((lit) => {
                   const indice = Object.keys(objeto).indexOf(lit);  
-                  console.log(`${lit}: ${valores[indice]["value"]}`);
+                  result[lit] = valores[indice]["value"];
+                  // console.log(`${lit}: ${valores[indice]["value"]}`);
                 });
-                console.log("-------------------------------------\n");
+                // console.log("-------------------------------------\n");
+                tuples.push(result);
+              
               }
               break;
           } //finaliza switch
         
       
     });
-  }
-  //SELECT * WHERE RELACIONALES
-  public where_all_rela(id: string, column: string, opera: string, valor: any){
-    const contextGlobal = this.getGlobal();
-    if(contextGlobal.tables.has(id.toLowerCase())) {
-      const table = contextGlobal.tables.get(id.toLowerCase())!;
-      const nesdw = table.fields.map(literal => literal.value);
-      console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
-      this.relacionales(id,table, nesdw, column, opera, valor);
-      
-    }
+    return tuples;
   }
     // agregar una columna a la tabla
     public add_column(id: string, field: Literal) { //nombre_tabla, object Tabla.ts
