@@ -123,6 +123,7 @@
   const {where_all_relaci} = require('./nonterminal/dml/select/where_select');
   const {where_column_relaci} = require('./nonterminal/dml/select/where_column_relaci');
   const {where_all_logic} = require('./nonterminal/dml/select/where_all_logic');
+  const {where_colum_logic} = require('./nonterminal/dml/select/where_colum_logic');
 
 
   //bloques
@@ -260,8 +261,11 @@ select
   |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp   { $$ = new where_column_relaci(@1.first_line, @1.first_column, $2, $4, $6, $7, $8 ); }
   |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp
   { $$ = new where_all_logic(@1.first_line, @1.first_column, $4, $6, $7, $8, $9, $10, $11, $12); }
-  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR logicos exp        { $$ = new where_column_logic(); }
-  //|TK_SELECT lista_columnas
+  |TK_SELECT TK_POR TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp    { $$ = new where_all_not();  }
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp      
+  { $$ = new where_colum_logic(@1.first_line, @1.first_column, $2, $4, $6, $7, $8, $9, $10, $11, $12  ); }
+  |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp    { $$ = new where_column_not();  }
+
 ;
 
 lista_columnas

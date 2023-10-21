@@ -211,41 +211,9 @@ export class Context {
       //console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
       const result1 = this.relacionales(table, nesdw, cond1, oper1, valor1);
       const result2 = this.relacionales(table, nesdw, cond2, oper2, valor2);
-      
-      /*  LISTA 1
-ID_Cliente: 3
-Nombre: Marvin Larios
-CorreoElectronico: marvin@example.com
--------------------------------g----------
-ID_Cliente: 4
-Nombre: Leticia Chay
-CorreoElectronico: Lety@example.com
--------------------------------g----------
-      */
-
-      /* LISTA 2
-ID_Cliente: 3
-Nombre: Marvin Larios
-CorreoElectronico: marvin@example.com
--------------------------------g----------      
-      */
 
       switch(logic){
         case 'AND':
-          // result1.forEach((objeto1) =>{
-          //   const valores = Object.values(objeto1);
-          //   //otro ciclo para imprimir cada una de las columnas 
-          //   nesdw.forEach((encabeza) => {
-          //     const indice = Object.keys(objeto1).indexOf(encabeza);
-
-          //     //Validacion de and -> recorrer la segunda lista de resultado
-          //     result2.forEach((objeto2) =>{
-          //       const valores2 = Object.values(objeto2);
-                
-          //     });
-
-          //   });
-          // });
           const new_list = result1.filter(objeto1 => {
             return result2.some(objeto2 => {
               return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) && objeto2[clave] == objeto1[clave]);
@@ -264,6 +232,37 @@ CorreoElectronico: marvin@example.com
       
     }
   }
+
+  public where_column_logic(columnas: [],id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
+    const contextGlobal = this.getGlobal();
+    if(contextGlobal.tables.has(id.toLowerCase())) {
+      const table = contextGlobal.tables.get(id.toLowerCase())!;
+      const nesdw = table.fields.map(literal => literal.value);
+      //console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+      const result1 = this.relacionales(table, columnas, cond1, oper1, valor1);
+      const result2 = this.relacionales(table, columnas, cond2, oper2, valor2);
+
+      switch(logic){
+        case 'AND':
+          const new_list = result1.filter(objeto1 => {
+            return result2.some(objeto2 => {
+              return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) && objeto2[clave] == objeto1[clave]);
+            });
+          });
+
+          console.log(new_list);
+          break;
+        case 'OR':
+          const new_lista = result1.concat(result2).filter((objeto, indice, lista) => {
+            return lista.findIndex(obj => JSON.stringify(obj) === JSON.stringify(objeto)) === indice;
+          });
+          console.log(new_lista);
+          break;
+      }
+      
+    }
+  }
+  //SELECT [] WHERE realaci LOGIC relacion
 
   public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
     const tuples: { [key: string]: any }[] = []; 
