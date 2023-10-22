@@ -176,6 +176,12 @@ break;
 case 43:
  this.$ = new update_relacional(_$[$0-7].first_line, _$[$0-7].first_column, $$[$0-6], $$[$0-4], $$[$0-2], $$[$0-1], $$[$0]); 
 break;
+case 44:
+ this.$ = new update_logic(_$[$0-11].first_line, _$[$0-11].first_column, $$[$0-10], $$[$0-8], $$[$0-6], $$[$0-5],$$[$0-4],$$[$0-3], $$[$0-2], $$[$0-1], $$[$0]); 
+break;
+case 45:
+ this.$ = new update_logic_not(_$[$0-8].first_line, _$[$0-8].first_column, $$[$0-7], $$[$0-5], $$[$0-2], $$[$0-1], $$[$0]); 
+break;
 case 48:
  this.$ = new columna_update(_$[$0-2].first_line, _$[$0-2].first_column, $$[$0-2], $$[$0]); 
 break;
@@ -424,6 +430,7 @@ parse: function parse(input) {
   const {where_column_not} = require('./nonterminal/dml/select/where_column_not');
   const {columna_update} = require('./nonterminal/dml/update/colum_update');
   const {update_relacional} = require('./nonterminal/dml/update/update_relacional');
+  const {update_logic} = require('./nonterminal/dml/update/update_logic');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');

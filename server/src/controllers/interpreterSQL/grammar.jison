@@ -129,6 +129,7 @@
   const {where_column_not} = require('./nonterminal/dml/select/where_column_not');
   const {columna_update} = require('./nonterminal/dml/update/colum_update');
   const {update_relacional} = require('./nonterminal/dml/update/update_relacional');
+  const {update_logic} = require('./nonterminal/dml/update/update_logic');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -284,7 +285,9 @@ update
   :TK_UPDATE TK_IDENTIFICADOR TK_SET lista_colum_update TK_WHERE TK_IDENTIFICADOR relacionales exp
   { $$ = new update_relacional(@1.first_line, @1.first_column, $2, $4, $6, $7, $8); }
   |TK_UPDATE TK_IDENTIFICADOR TK_SET lista_colum_update TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp
+  { $$ = new update_logic(@1.first_line, @1.first_column, $2, $4, $6, $7,$8,$9, $10, $11, $12); }
   |TK_UPDATE TK_IDENTIFICADOR TK_SET lista_colum_update TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp
+  { $$ = new update_logic_not(@1.first_line, @1.first_column, $2, $4, $7, $8, $9); }
 ;
 
 lista_colum_update

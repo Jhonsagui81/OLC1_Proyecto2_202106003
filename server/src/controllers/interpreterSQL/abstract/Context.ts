@@ -293,6 +293,70 @@ export class Context {
     }
   }
 
+  public update_logic(id:string, fields: any[], cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
+    const contextGlobal = this.getGlobal();
+    if(contextGlobal.tables.has(id.toLowerCase())) {
+      const table = contextGlobal.tables.get(id.toLowerCase())!;
+      const nesdw = table.fields.map(literal => literal.value);
+      //console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+      const result1 = this.relacionales(table, nesdw, cond1, oper1, valor1);
+      const result2 = this.relacionales(table, nesdw, cond2, oper2, valor2);
+
+      switch(logic){
+        case 'AND':
+          //Nueva lista con las dos condiciones aplicadas 
+          const new_list = result1.filter(objeto1 => {
+            return result2.some(objeto2 => {
+              return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) && objeto2[clave] == objeto1[clave]);
+            });
+          });
+
+          //ACTUALIZACION de los valores 
+          fields.forEach((con) => {
+            // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
+            for(let i = 0; i<table.tuples.length; i++) {
+              const tuple = table.tuples[i];
+              const match = new_list.find(t => t.ID_Cliente === tuple.ID_Cliente.value);
+              
+              if(match){
+                // table.tuples[i][con.id]["value"] = match.Nombre;
+                tuple[con.id]["value"] = con.valor;
+                
+              }
+            }
+    
+          });
+          console.log("Actualizado");
+          break;
+        case 'OR':
+           //Nueva lista con las dos condiciones aplicadas
+          const new_lista = result1.concat(result2).filter((objeto, indice, lista) => {
+            return lista.findIndex(obj => JSON.stringify(obj) === JSON.stringify(objeto)) === indice;
+          });
+
+          //ACTUALIZACION de los valores 
+          fields.forEach((con) => {
+            // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
+            for(let i = 0; i<table.tuples.length; i++) {
+              const tuple = table.tuples[i];
+              const match = new_lista.find(t => t.ID_Cliente === tuple.ID_Cliente.value);
+              
+              if(match){
+                // table.tuples[i][con.id]["value"] = match.Nombre;
+                tuple[con.id]["value"] = con.valor;
+                
+              }
+            }
+    
+          });
+          console.log("Actualizado");
+          break;
+      }
+
+
+    } 
+  }
+
   public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
     const tuples: { [key: string]: any }[] = []; 
     tabla.tuples.forEach((objeto) =>{
