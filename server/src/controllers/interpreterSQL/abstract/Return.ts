@@ -15,3 +15,8 @@ export enum Type{
     value: any, 
     type: Type
   }
+
+  export type column_update = {
+    id: string,
+    valor: any
+  }

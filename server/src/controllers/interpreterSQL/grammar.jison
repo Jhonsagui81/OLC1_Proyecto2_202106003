@@ -72,6 +72,7 @@
 "as"          return 'TK_AS';
 "from"        return 'TK_FROM';
 "where"       return 'TK_WHERE';
+"update"      return 'TK_UPDATE';
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -126,6 +127,8 @@
   const {where_colum_logic} = require('./nonterminal/dml/select/where_colum_logic');
   const {where_all_not} = require('./nonterminal/dml/select/where_all_not');
   const {where_column_not} = require('./nonterminal/dml/select/where_column_not');
+  const {columna_update} = require('./nonterminal/dml/update/colum_update');
+  const {update_relacional} = require('./nonterminal/dml/update/update_relacional');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -250,6 +253,7 @@ atributoTabla
 dml
   : insertar  { $$ = $1; }
   | select    { $$ = $1; }
+  | update    { $$ = $1; }
 ;
 
 select
@@ -269,13 +273,30 @@ select
   { $$ = new where_all_not(@1.first_line, @1.first_column, $4, $7, $8, $9 );  }
   |TK_SELECT lista_columnas TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp   
   { $$ = new where_column_not(@1.first_line, @1.first_column, $2, $4, $7, $8, $9 );  }
-
 ;
 
 lista_columnas
   :lista_columnas TK_COMA TK_IDENTIFICADOR      { $$ = $1; $$.push($3); }
   |TK_IDENTIFICADOR                             { $$ = []; $$.push($1); }
 ;
+
+update
+  :TK_UPDATE TK_IDENTIFICADOR TK_SET lista_colum_update TK_WHERE TK_IDENTIFICADOR relacionales exp
+  { $$ = new update_relacional(@1.first_line, @1.first_column, $2, $4, $6, $7, $8); }
+  |TK_UPDATE TK_IDENTIFICADOR TK_SET lista_colum_update TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp
+  |TK_UPDATE TK_IDENTIFICADOR TK_SET lista_colum_update TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp
+;
+
+lista_colum_update
+  :lista_colum_update TK_COMA column_update     { $$ = $1; $$.push($3); }
+  |column_update                                { $$ = []; $$.push($1); }
+;
+
+column_update
+  :TK_IDENTIFICADOR TK_IGUALACION exp         { $$ = new columna_update(@1.first_line, @1.first_column, $1, $3); }
+;
+
+
 
 nativas
   :TK_SELECT TK_ARROBA TK_IDENTIFICADOR TK_AS TK_IDENTIFICADOR       { $$ = new imprimir_Valor_var(); } 

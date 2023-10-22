@@ -260,6 +260,39 @@ export class Context {
     }
   }
 
+  //UPDATE RELACIONALES 
+  public update_relacionales(id:string, fields: any[], column_condi:string, opera:string, valor: any){
+    fields.forEach((con) => {
+      // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
+    });
+
+    const contextGlobal = this.getGlobal();
+    if(contextGlobal.tables.has(id.toLowerCase())) {
+      const table = contextGlobal.tables.get(id.toLowerCase())!;
+      const nesdw = table.fields.map(literal => literal.value);
+
+      const result1 = this.relacionales(table, nesdw, column_condi, opera, valor);
+
+
+      fields.forEach((con) => {
+        // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
+        for(let i = 0; i<table.tuples.length; i++) {
+          const tuple = table.tuples[i];
+          const match = result1.find(t => t.ID_Cliente === tuple.ID_Cliente.value);
+          
+          if(match){
+            // table.tuples[i][con.id]["value"] = match.Nombre;
+            tuple[con.id]["value"] = con.valor;
+            
+          }
+        }
+
+      });
+      
+      console.log("Actualizado");
+    }
+  }
+
   public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
     const tuples: { [key: string]: any }[] = []; 
     tabla.tuples.forEach((objeto) =>{

@@ -18,7 +18,7 @@ export class where_all_relaci extends AbstractSQLExpression {
             let exp = this.expre.interpret(context);  //retorno value, type
             
             console.log("\nRESULTADO DE CONSULTA SELECT [...] FROM "+this.name_table+" WHERE "+this.name_colum_condicion+" "+this.operador+" "+exp.value+"\n");
-
+        
             context.where_all_rela(this.name_table, this.name_colum_condicion, this.operador, exp.value);
            // context.while_all(this.name_table, this.name_colum_condicion, this.operador, )
 
