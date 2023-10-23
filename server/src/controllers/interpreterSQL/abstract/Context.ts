@@ -82,7 +82,7 @@ export class Context {
     }
 
     // agregar una tabla
-    public saveTable(id: string, table: Table) { //nombre_tabla, object Tabla.ts
+      public saveTable(id: string, table: Table) { //nombre_tabla, object Tabla.ts
         // verificar el ambito
         let env: Context | null = this; //esta variable sera ya sea tipo contexto o null y sele asigna el contexto que la llamo
         // verificar si la tabla ya existe
@@ -200,7 +200,7 @@ export class Context {
   }
 
   //SELECT * WHERE relacion LOGIC relacion
-  public where_all_logic(id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
+    public where_all_logic(id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
     const contextGlobal = this.getGlobal();
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
@@ -228,9 +228,9 @@ export class Context {
       }
       
     }
-  }
+    }
 
-  public where_column_logic(columnas: [],id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
+    public where_column_logic(columnas: [],id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
     const contextGlobal = this.getGlobal();
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
@@ -258,14 +258,13 @@ export class Context {
       }
       
     }
-  }
+    }
 
   //UPDATE RELACIONALES 
-  public update_relacionales(id:string, fields: any[], column_condi:string, opera:string, valor: any){
-    fields.forEach((con) => {
-      // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
-    });
-
+    public update_relacionales(id:string, fields: any[], column_condi:string, opera:string, valor: any){
+    // fields.forEach((con) => {
+        // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
+    // });
     const contextGlobal = this.getGlobal();
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
@@ -273,27 +272,32 @@ export class Context {
 
       const result1 = this.relacionales(table, nesdw, column_condi, opera, valor);
 
-
-      fields.forEach((con) => {
-        // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
-        for(let i = 0; i<table.tuples.length; i++) {
-          const tuple = table.tuples[i];
-          const match = result1.find(t => t.ID_Cliente === tuple.ID_Cliente.value);
-          
-          if(match){
-            // table.tuples[i][con.id]["value"] = match.Nombre;
-            tuple[con.id]["value"] = con.valor;
-            
+      for (const nueva_tu of result1){
+        for( let i = table.tuples.length -1; i>=0; i--){
+          let found = false;
+          for(const clave in nueva_tu){
+            if(nueva_tu.hasOwnProperty(clave)) {
+              if(table.tuples[i][clave]["value"] !== nueva_tu[clave]) {
+                found = false;
+                break;
+              }
+              found = true;
+            }
+          }
+          if (found) {
+            fields.forEach((con) =>{
+              table.tuples[i][con.id]["value"] = con.valor;
+            });  
           }
         }
+      }
 
-      });
       
       console.log("Actualizado");
     }
-  }
-
-  public update_logic(id:string, fields: any[], cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
+    }
+    //UPDATE LOGIC
+    public update_logic(id:string, fields: any[], cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
     const contextGlobal = this.getGlobal();
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
@@ -312,20 +316,25 @@ export class Context {
           });
 
           //ACTUALIZACION de los valores 
-          fields.forEach((con) => {
-            // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
-            for(let i = 0; i<table.tuples.length; i++) {
-              const tuple = table.tuples[i];
-              const match = new_list.find(t => t.ID_Cliente === tuple.ID_Cliente.value);
-              
-              if(match){
-                // table.tuples[i][con.id]["value"] = match.Nombre;
-                tuple[con.id]["value"] = con.valor;
-                
+          for (const nueva_tu of new_list){
+            for( let i = table.tuples.length -1; i>=0; i--){
+              let found = false;
+              for(const clave in nueva_tu){
+                if(nueva_tu.hasOwnProperty(clave)) {
+                  if(table.tuples[i][clave]["value"] !== nueva_tu[clave]) {
+                    found = false;
+                    break;
+                  }
+                  found = true;
+                }
+              }
+              if (found) {
+                fields.forEach((con) =>{
+                  table.tuples[i][con.id]["value"] = con.valor;
+                });  
               }
             }
-    
-          });
+          }
           console.log("Actualizado");
           break;
         case 'OR':
@@ -335,29 +344,73 @@ export class Context {
           });
 
           //ACTUALIZACION de los valores 
-          fields.forEach((con) => {
-            // console.log(con.valor+": "+con.id);   //Jhonatan Reyes: Nombre
-            for(let i = 0; i<table.tuples.length; i++) {
-              const tuple = table.tuples[i];
-              const match = new_lista.find(t => t.ID_Cliente === tuple.ID_Cliente.value);
-              
-              if(match){
-                // table.tuples[i][con.id]["value"] = match.Nombre;
-                tuple[con.id]["value"] = con.valor;
-                
+          for (const nueva_tu of new_lista){
+            for( let i = table.tuples.length -1; i>=0; i--){
+              let found = false;
+              for(const clave in nueva_tu){
+                if(nueva_tu.hasOwnProperty(clave)) {
+                  if(table.tuples[i][clave]["value"] !== nueva_tu[clave]) {
+                    found = false;
+                    break;
+                  }
+                  found = true;
+                }
+              }
+              if (found) {
+                fields.forEach((con) =>{
+                  table.tuples[i][con.id]["value"] = con.valor;
+                });  
               }
             }
-    
-          });
+          }
           console.log("Actualizado");
           break;
       }
 
 
     } 
-  }
+    }
 
-  public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
+    //TRUNCATE TABLE
+    public truncate_table(id:string){
+      const contextGlobal = this.getGlobal();
+      if(contextGlobal.tables.has(id.toLowerCase())) {
+        const table = contextGlobal.tables.get(id.toLowerCase())!;
+        table.tuples.splice(0, table.tuples.length);
+        //console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+      }
+    }
+
+    //DELETE relacionales
+    public delete_relacionales(id:string, cond1:string, oper:string, valor: any){
+      const contexGlobal = this.getGlobal();
+      if(contexGlobal.tables.has(id.toLowerCase())){
+        const table = contexGlobal.tables.get(id.toLowerCase())!;
+        const nesdw = table.fields.map(literal => literal.value);
+
+        const result1 = this.relacionales(table, nesdw, cond1, oper, valor);
+
+        for(const nueva_tu of result1){
+          for(let i = table.tuples.length -1; i >= 0; i--){
+            let found = false;
+            for(const clave in nueva_tu){
+              if(nueva_tu.hasOwnProperty(clave)){
+                if(table.tuples[i][clave]['value'] !== nueva_tu[clave]){
+                  found = false;
+                  break;
+                }
+                found = true;
+              }
+            }
+            if(found){
+              table.tuples.splice(i, 1);
+            }
+          }
+        }
+      }
+    }
+    //METODO RELACIONALES
+    public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
     const tuples: { [key: string]: any }[] = []; 
     tabla.tuples.forEach((objeto) =>{
       const valores = Object.values(objeto);
@@ -449,7 +502,7 @@ export class Context {
       
     });
     return tuples;
-  }
+    }
     // agregar una columna a la tabla
     public add_column(id: string, field: Literal) { //nombre_tabla, object Tabla.ts
       // verificar el ambito
@@ -547,7 +600,7 @@ export class Context {
 
     // retornar el entorno global
     return context;
-  }
+   }
 
     // obtener todas las tablas
     public getTables(){

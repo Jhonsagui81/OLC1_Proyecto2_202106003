@@ -73,6 +73,9 @@
 "from"        return 'TK_FROM';
 "where"       return 'TK_WHERE';
 "update"      return 'TK_UPDATE';
+"truncate"  	return 'TK_TRUNCATE';
+"delete"      return 'TK_DELETE';
+
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -130,6 +133,8 @@
   const {columna_update} = require('./nonterminal/dml/update/colum_update');
   const {update_relacional} = require('./nonterminal/dml/update/update_relacional');
   const {update_logic} = require('./nonterminal/dml/update/update_logic');
+  const {truncate_table} = require('./nonterminal/dml/truncate/truncate_table');
+  const {delete_relacional} = require('./nonterminal/dml/delete/delete_relaciona');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -255,6 +260,8 @@ dml
   : insertar  { $$ = $1; }
   | select    { $$ = $1; }
   | update    { $$ = $1; }
+  | truncate  { $$ = $1; }
+  | delete    { $$ = $1; }
 ;
 
 select
@@ -297,6 +304,19 @@ lista_colum_update
 
 column_update
   :TK_IDENTIFICADOR TK_IGUALACION exp         { $$ = new columna_update(@1.first_line, @1.first_column, $1, $3); }
+;
+
+truncate
+  :TK_TRUNCATE TK_TABLE TK_IDENTIFICADOR        {$$ = new truncate_table(@1.first_line, @1.first_column, $3 ); }
+;
+
+delete
+  :TK_DELETE TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp  
+  { $$ = new delete_relacional(@1.first_line, @1.first_column, $3, $5, $6, $7); }
+  |TK_DELETE TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp
+  { $$ = new delete_logic(); }
+  |TK_DELETE TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp
+  { $$ = new delete_logic_not(); }
 ;
 
 
