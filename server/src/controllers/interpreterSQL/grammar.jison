@@ -76,6 +76,8 @@
 "truncate"  	return 'TK_TRUNCATE';
 "delete"      return 'TK_DELETE';
 
+// --------------> nativas
+"PRINT"       return 'TK_PRINT';
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -90,7 +92,7 @@
 
 [0-9]+               return 'TK_ENTERO';
 [0-9]+("."[0-9]+)\b     return 'TK_DOUBLE';
-(\d{4})-(\d{1,2})-(\d{1,2}) return 'TK_DATE';
+^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$    return 'TK_DATE';
 ["]                             {cadena="";this.begin("string");}
 <string>[^"\\]+                 {cadena+=yytext;}
 <string>"\\\""                  {cadena+="\"";}
@@ -135,6 +137,8 @@
   const {update_logic} = require('./nonterminal/dml/update/update_logic');
   const {truncate_table} = require('./nonterminal/dml/truncate/truncate_table');
   const {delete_relacional} = require('./nonterminal/dml/delete/delete_relaciona');
+  const {delete_logic} = require('./nonterminal/dml/delete/delete_logic');
+  const {delete_not} = require('./nonterminal/dml/delete/delete_not');
 
   //bloques
   const {bloque} = require('./nonterminal/Bloques/bloque');
@@ -182,8 +186,9 @@ instruccion_global
   //| funciones TK_PTCOMA                 { $$ = $1; }
   //| metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
-//	| error TK_PTCOMA
-  //	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
+  | nativas TK_PTCOMA     { $$ = $1; }
+	| error TK_PTCOMA
+  	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
 ;
 
 bloques
@@ -201,7 +206,7 @@ instrucci_local
   |dml TK_PTCOMA                      { $$ = $1; }
   //|casteo
   //|llamadas
-  //|nativas
+  |nativas  TK_PTCOMA                          { $$ = $1; }
   //|sentencias_control
   //|sebtencias_ciclicas
 ;
@@ -314,15 +319,15 @@ delete
   :TK_DELETE TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp  
   { $$ = new delete_relacional(@1.first_line, @1.first_column, $3, $5, $6, $7); }
   |TK_DELETE TK_FROM TK_IDENTIFICADOR TK_WHERE TK_IDENTIFICADOR relacionales exp logicos TK_IDENTIFICADOR relacionales exp
-  { $$ = new delete_logic(); }
+  { $$ = new delete_logic(@1.first_line, @1.first_column, $3, $5, $6, $7, $8, $9, $10, $11); }
   |TK_DELETE TK_FROM TK_IDENTIFICADOR TK_WHERE TK_NOT TK_IDENTIFICADOR relacionales exp
-  { $$ = new delete_logic_not(); }
+  { $$ = new delete_not(@1.first_line, @1.first_column, $3, $6, $7, $8); }
 ;
 
 
 
 nativas
-  :TK_SELECT TK_ARROBA TK_IDENTIFICADOR TK_AS TK_IDENTIFICADOR       { $$ = new imprimir_Valor_var(); } 
+  :  TK_PRINT exp    { $$ = new print(); }
 ;
 
 insertar
@@ -341,13 +346,13 @@ listaValores
 ;
 
 exp 
-  :exp TK_MAS exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, '+', $3 ); }
+  :valor              { $$ = $1; }
+  |exp TK_MAS exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, '+', $3 ); }
   |exp TK_MENOS exp   { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "-", $3 ); }
   |exp TK_POR exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "*", $3 ); }
   |exp TK_DIV exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "/", $3 ); }
   |exp TK_MODULO exp  { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "%", $3 ); }
   |TK_MENOS valor     { $$ = new LiteralExpression(@1.first_line, @1.first_column, $2, Type.NEGATIVE); }
-  |valor              { $$ = $1; }
 ;
 
 valor

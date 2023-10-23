@@ -48,7 +48,8 @@ export class Context {
     //Declara una variable con un valor 
     public add_variable_dato(id:string, valor: any){
       let env: Context = this;
-      let symbol = new Symbol(valor.value, id, valor.tipy);
+      console.log("valor de ato: "+valor.value)
+      let symbol = new Symbol(valor.value, id, valor.type);
       if(!env.symbolTable.has(id.toLowerCase())){ //si esta variable no esta en la tabla
         env.symbolTable.set(id.toLowerCase(), symbol); 
         //funcion para mostrar variables
@@ -89,7 +90,7 @@ export class Context {
         if (!env.tables.has(id.toLowerCase())) {  //SI ESTA TABLA YA EXISTE
           // guardar la tabla en una tabla de simbolos
           env.tables.set(id.toLowerCase(),table); //AGREGARLE al contexto un id de tabla y objeto tabla
-          this.getTables();
+          // this.getTables();
         }else {
           console.log("Error, La tabla "+id+" ya existe en el entorno");
           //printlist.push("Error, La tabla "+id+" ya existe en el entorno");
@@ -409,6 +410,79 @@ export class Context {
         }
       }
     }
+
+    //DELETE Logic 
+    public delete_logicos(id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:string){
+      const contextGlobal = this.getGlobal();
+      if(contextGlobal.tables.has(id.toLowerCase())) {
+        const table = contextGlobal.tables.get(id.toLowerCase())!;
+        const nesdw = table.fields.map(literal => literal.value);
+        //console.log("\nRESULTADO DE CONSULTA SELECT * FROM "+id+" WHERE "+column+" "+opera+" "+valor+"\n")
+        const result1 = this.relacionales(table, nesdw, cond1, oper1, valor1);
+        const result2 = this.relacionales(table, nesdw, cond2, oper2, valor2);
+
+        switch(logic){
+          case 'AND':
+            //Nueva lista con las dos condiciones aplicadas 
+            const new_list = result1.filter(objeto1 => {
+              return result2.some(objeto2 => {
+                return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) && objeto2[clave] == objeto1[clave]);
+              });
+            });
+  
+            //ACTUALIZACION de los valores 
+            for(const nueva_tu of new_list){
+              for(let i = table.tuples.length -1; i >= 0; i--){
+                let found = false;
+                for(const clave in nueva_tu){
+                  if(nueva_tu.hasOwnProperty(clave)){
+                    if(table.tuples[i][clave]['value'] !== nueva_tu[clave]){
+                      found = false;
+                      break;
+                    }
+                    found = true;
+                  }
+                }
+                if(found){
+                  table.tuples.splice(i, 1);
+                }
+              }
+            }
+            
+            console.log("Eliminado");
+            break;
+          case 'OR':
+             //Nueva lista con las dos condiciones aplicadas
+            const new_lista = result1.concat(result2).filter((objeto, indice, lista) => {
+              return lista.findIndex(obj => JSON.stringify(obj) === JSON.stringify(objeto)) === indice;
+            });
+  
+            //ACTUALIZACION de los valores 
+            for(const nueva_tu of new_lista){
+              for(let i = table.tuples.length -1; i >= 0; i--){
+                let found = false;
+                for(const clave in nueva_tu){
+                  if(nueva_tu.hasOwnProperty(clave)){
+                    if(table.tuples[i][clave]['value'] !== nueva_tu[clave]){
+                      found = false;
+                      break;
+                    }
+                    found = true;
+                  }
+                }
+                if(found){
+                  table.tuples.splice(i, 1);
+                }
+              }
+            }
+            
+            console.log("Eliminado");
+            break;
+        }
+      }
+    }
+
+
     //METODO RELACIONALES
     public relacionales(tabla: Table, nesdw: any[], colum_cond:string, opera:string, valor:any ): { [key:string]:any}[] {
     const tuples: { [key: string]: any }[] = []; 

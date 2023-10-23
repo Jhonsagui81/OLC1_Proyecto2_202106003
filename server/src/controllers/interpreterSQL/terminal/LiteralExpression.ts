@@ -27,7 +27,9 @@ export class LiteralExpression extends AbstractSQLExpression { //herencia
         this.type = Type.DOUBLE;
         break;
       case Type.DATE:
-        this.value = new Date(this.value);
+        console.log("lorq tare ed"+this.value);
+        const partes = this.value.split("-");
+        this.value = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
         this.type = Type.DATE;
         break;
       case Type.VARCHAR:

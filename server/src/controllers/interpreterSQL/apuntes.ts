@@ -17,3 +17,7 @@ const {where_column_not} = require('./nonterminal/dml/select/where_column_not');
 const {columna_update} = require('./nonterminal/dml/update/colum_update');
 const {update_relacional} = require('./nonterminal/dml/update/update_relacional');
 const {update_logic} = require('./nonterminal/dml/update/update_logic');
+const {truncate_table} = require('./nonterminal/dml/truncate/truncate_table');
+const {delete_relacional} = require('./nonterminal/dml/delete/delete_relaciona');
+const {delete_logic} = require('./nonterminal/dml/delete/delete_logic');
+const {delete_not} = require('./nonterminal/dml/delete/delete_not');
