@@ -22,11 +22,19 @@ export class where_colum_logic extends AbstractSQLExpression {
         public interpret(context: Context) {
             let exp1 = this.expre1.interpret(context);  //retorno value, type
             let exp2 = this.expre2.interpret(context);
-
-            console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+this.name_table+" WHERE "+this.condicion1+" "+this.oper1+" "+exp1.value+" "+this.logic+" "+this.condicion2 + " "+this.oper2+" "+exp2.value+"\n")
-
-            context.where_column_logic(this.columnas,this.name_table, this.condicion1, this.oper1, exp1.value, this.logic, this.condicion2, this.oper2, exp2.value);
             
+            //result 
+            let result = '';
+            result += "->CONSULTA SELECT ";
+            let neww = '';
+            for(let ele of this.columnas){
+                neww += ele+", ";
+            }
+            result += neww.slice(0, -2)
+            result += " FROM "+this.name_table+" WHERE "+this.condicion1+" "+this.oper1+" "+exp1.value+" "+this.logic+" "+this.condicion2+" "+this.oper2+" "+exp2.value+"\n";
+            result+= context.where_column_logic(this.columnas,this.name_table, this.condicion1, this.oper1, exp1.value, this.logic, this.condicion2, this.oper2, exp2.value);
+            result += '\n\n';
+            return result; 
 
         }
 }

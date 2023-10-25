@@ -15,8 +15,8 @@
 // simbolos reservados
 ";"                 return 'TK_PTCOMA';
 "("                 return 'TK_PARIZQ';
-")"                 return 'TK_PARDER';
 "."                 return 'TK_PUNTO';
+")"                 return 'TK_PARDER';
 ":"                 return 'TK_DOSPUNTOS';
 ","                 return 'TK_COMA';
 "["                 return 'TK_CORIZR';
@@ -89,10 +89,9 @@
 "set"             return 'TK_SET';
 
 [a-zA-Z][a-zA-Z0-9_]*   return 'TK_IDENTIFICADOR';
-
+[0-9]+\.[0-9]+\b     return 'TK_DOUBLE';
 [0-9]+               return 'TK_ENTERO';
-[0-9]+("."[0-9]+)\b     return 'TK_DOUBLE';
-^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$    return 'TK_DATE';
+^'(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])'$      return 'TK_DATE';
 ["]                             {cadena="";this.begin("string");}
 <string>[^"\\]+                 {cadena+=yytext;}
 <string>"\\\""                  {cadena+="\"";}
@@ -135,6 +134,7 @@
   const {columna_update} = require('./nonterminal/dml/update/colum_update');
   const {update_relacional} = require('./nonterminal/dml/update/update_relacional');
   const {update_logic} = require('./nonterminal/dml/update/update_logic');
+  const {update_logic_not} = require('./nonterminal/dml/update/update_not');
   const {truncate_table} = require('./nonterminal/dml/truncate/truncate_table');
   const {delete_relacional} = require('./nonterminal/dml/delete/delete_relaciona');
   const {delete_logic} = require('./nonterminal/dml/delete/delete_logic');

@@ -20,7 +20,10 @@ export class delete_logic extends AbstractSQLExpression {
         public interpret(context: Context) {
             let exp1 = this.exp1.interpret(context);
             let exp2 = this.exp2.interpret(context);
+            let result = '';
 
+            result += "->DELETE FROM "+this.id+" WHERE "+ this.condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.condi2+" "+this.opera2+" "+exp2.value+"\n\n";
             context.delete_logicos(this.id, this.condi1, this.opera1, exp1.value, this.logic, this.condi2, this.opera2, exp2.value);
+            return result; 
         }
 }

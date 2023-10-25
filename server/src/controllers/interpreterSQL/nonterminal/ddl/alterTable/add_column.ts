@@ -9,7 +9,10 @@ export class add_column extends AbstractSQLExpression {
     }
 
     public interpret(context: Context){
+        let result = '';
         const field_ = this.field.interpret(context);
         context.add_column(this.name, field_);
+        result += '-> Se agrego la columna '+field_.value+' en la tabla: '+this.name+'\n\n';
+        return result; 
     }
 }

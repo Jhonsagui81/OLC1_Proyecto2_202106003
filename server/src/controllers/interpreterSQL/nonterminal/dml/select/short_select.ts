@@ -8,7 +8,9 @@ export class short_select extends AbstractSQLExpression {
     }
 
     public interpret(context: Context) {
-        console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+this.name_table+"\n");
-        context.short_select(this.name_table);    
+        let result = "->CONSULTA SELECT * FROM "+this.name_table+"\n";
+        result += context.short_select(this.name_table);    
+        result += '\n\n';
+        return result;
     }
 }

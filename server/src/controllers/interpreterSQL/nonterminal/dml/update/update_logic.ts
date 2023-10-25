@@ -24,13 +24,22 @@ export class update_logic extends AbstractSQLExpression {
         public interpret(context: Context) {
             let exp1 = this.exp1.interpret(context);
             let exp2 = this.exp2.interpret(context);
+            let result =''; 
 
             const fields = this.lista.map((elemento) =>{
                 const value = elemento.interpret(context);
                 return value;
             });
-
-            console.log("UPDATE "+this.id+" SET [] WHERE "+this.column_condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.column_condi2+" "+this.opera2+" "+exp2.value );
+            result+="-> UPDATE "+this.id+" SET ";
+            let neww = '';
+            fields.forEach((ele) =>{
+                neww += ele.id+" = "+ele.valor+", ";
+            });
+                
+            
+            result += neww.slice(0, -2)    
+            result +=" WHERE "+this.column_condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.column_condi2+" "+this.opera2+" "+exp2.value+"\n\n";
             context.update_logic(this.id, fields, this.column_condi1, this.opera1, exp1.value, this.logic, this.column_condi2, this.opera2, exp2.value );
+            return result; 
         }
 }

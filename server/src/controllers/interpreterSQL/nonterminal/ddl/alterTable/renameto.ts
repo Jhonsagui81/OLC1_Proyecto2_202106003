@@ -8,6 +8,9 @@ export class rename_to extends AbstractSQLExpression {
     }
 
     public interpret(context: Context){
+        let result = '';
         context.rename_to(this.name.toString(), this.new_name.toString());
+        result += '-> Se actualizo el nombre de la tabla '+this.name+' a : '+this.new_name+'\n\n';
+        return result;
     }
 }

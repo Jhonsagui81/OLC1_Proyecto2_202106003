@@ -17,7 +17,7 @@ export class delete_not extends AbstractSQLExpression {
 
         public interpret(context: Context) {
             let exp = this.exp.interpret(context);
-
+            let result = "";
             switch(this.oper){
                 case '=':
                     this.oper_verdadero = '!=';
@@ -38,8 +38,9 @@ export class delete_not extends AbstractSQLExpression {
                     this.oper_verdadero = '<=';
                     break;
             }
-
+            result += "->DELETE FROM "+this.id+" WHERE NOT "+ this.column_condi+" "+this.oper+" "+exp.value+"\n\n";
             //llama metodo
             context.delete_relacionales(this.id, this.column_condi, this.oper_verdadero, exp.value);
+            return result; 
         }
 }

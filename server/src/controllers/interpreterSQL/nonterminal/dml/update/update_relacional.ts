@@ -19,13 +19,22 @@ export class update_relacional extends AbstractSQLExpression {
 
         public interpret(context: Context) {
             let exp = this.exp1.interpret(context);
+            let result = '';
 
             const fields = this.lista.map((elemento) =>{
                 const value = elemento.interpret(context);
                 return value;
             });
+            
+            result+="-> UPDATE "+this.id+" SET ";
+            let neww = '';
+            fields.forEach((ele) =>{
+                neww += ele.id+" = "+ele.valor+", ";
+            }); 
 
-            console.log("UPDATE "+this.id+" SET [] WHERE "+this.column_condi+" "+this.opera+" "+exp.value);
+            result += neww.slice(0, -2)
+            result += " WHERE "+this.column_condi+" "+this.opera+" "+exp.value+"\n\n";
             context.update_relacionales(this.id, fields, this.column_condi, this.opera, exp.value);
+            return result; 
         }
 }

@@ -1,0 +1,42 @@
+/* ./css/NavigationBar.css */
+/* ./css/NavigationBar.css */
+
+.navbar {
+    background-color: #333;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+  }
+  
+  .nav-item {
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    margin: 5px; /* Agrega margen entre los elementos */
+    border: 2px solid cyan; /* Agrega un borde cyan a cada elemento */
+    border-radius: 5px; /* Agrega esquinas redondeadas a los elementos */
+  }
+  .archivo-menu {
+    position: absolute;
+    top: 10%; /* Coloca el menú debajo del elemento "Archivo" */
+    left: 10%;
+    display: flex;
+    flex-direction: column;
+    background-color: #333; /* Fondo blanco */
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 1; /* Asegura que el menú esté por encima de otras cajas */
+
+  }
+  
+  .archivo-menu div {
+    opacity: 0; /* Inicialmente, las subopciones son transparentes */
+    transition: opacity 0.3s; /* Agrega una transición de opacidad */
+  }
+  
+  .nav-item:hover .archivo-menu div {
+    opacity: 1; /* Cuando pasas el puntero sobre una subopción, se vuelve visible */
+    pointer-events: auto; /* Permite interactuar con la subopción cuando es visible */
+  }

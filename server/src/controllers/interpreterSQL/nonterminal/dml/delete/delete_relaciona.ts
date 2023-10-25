@@ -15,7 +15,9 @@ export class delete_relacional extends AbstractSQLExpression {
 
         public interpret(context: Context) {
             let exp1 = this.exp.interpret(context);
-
+            let result = '';
+            result += "->DELETE FROM "+this.id+" WHERE "+ this.column_condi+" "+this.oper+" "+exp1.value+"\n\n";
             context.delete_relacionales(this.id, this.column_condi, this.oper, exp1.value);
+            return result; 
         }
 }

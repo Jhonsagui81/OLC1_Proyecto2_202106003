@@ -11,8 +11,18 @@ export class simple_select extends AbstractSQLExpression {
     }
   
     public interpret(context : Context){
-      console.log("\nRESULTADO DE CONSULTA SELECT [] FROM "+this.name+"\n");
-      context.simple_select(this.name, this.name_table);
+      let result = '';
+      result += "->CONSULTA SELECT ";
+      let neww = '';
+      for(let ele of this.name){
+        neww += ele+", ";
+      }
+      result += neww.slice(0, -2)
+      result += " FROM "+this.name_table+"\n";
 
+
+      result += context.simple_select(this.name, this.name_table);
+      result += '\n\n'
+      return result;
     }
 }

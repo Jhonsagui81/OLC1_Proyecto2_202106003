@@ -20,6 +20,7 @@ export class update_logic_not extends AbstractSQLExpression {
 
         public interpret(context: Context) {
             let exp = this.exp1.interpret(context);
+            let result = '';
 
             const fields = this.lista.map((elemento) =>{
                 const value = elemento.interpret(context);
@@ -47,7 +48,15 @@ export class update_logic_not extends AbstractSQLExpression {
                     break;
             }
 
+            result+="-> UPDATE "+this.id+" SET ";
+            let neww = '';
+            fields.forEach((ele) =>{
+                neww += ele.id+" = "+ele.valor+", ";
+            }); 
+            result += neww.slice(0, -2)
+            result +=" WHERE NOT"+this.column_condi+" "+this.opera+" "+exp.value+"\n\n";
             //llamar al metodo 
             context.update_relacionales(this.id, fields, this.column_condi, this.oper_verdadero, exp.value);
+            return result; 
         }
 }

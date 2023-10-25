@@ -1,0 +1,16 @@
+/* Estilo para las pestañas */
+.tab {
+    display: inline-block; /* Hace que las pestañas se muestren en línea */
+    padding: 10px 20px; /* Agrega espaciado interno para que las pestañas sean clicables */
+    cursor: pointer; /* Cambia el cursor al puntero al pasar el mouse por encima */
+    background-color: #f0f0f0; /* Color de fondo de las pestañas */
+    border: 1px solid #ccc; /* Borde de las pestañas */
+    margin-right: 5px; /* Agrega un pequeño margen entre las pestañas */
+  }
+  
+  /* Estilo para la pestaña activa */
+  .tab.active {
+    background-color: #007bff; /* Color de fondo para la pestaña activa */
+    color: #fff; /* Color del texto en la pestaña activa */
+  }
+  

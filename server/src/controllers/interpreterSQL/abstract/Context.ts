@@ -125,84 +125,149 @@ export class Context {
   //Simple_SELECT
   public simple_select(columns: [], name: string){
     const contextGlobal = this.getGlobal();
-
+    let result = '';
     if(contextGlobal.tables.has(name.toLowerCase())) {
       const table = contextGlobal.tables.get(name.toLowerCase())!;
-      table.tuples.forEach((objeto) =>{
-        const valores = Object.values(objeto); 
+      try{
+        const generateTable = (data:any, selectedColumns:any[]) => {
+          const tableText = [];
+          const headers = selectedColumns;
+        
+          // Genera los encabezados de la tabla
+          const headerRow = headers.map((header) => header.padEnd(20));
 
-        columns.forEach((clave) => {
-          const indice = Object.keys(objeto).indexOf(clave);
-          console.log(`${clave}: ${valores[indice]["value"]}`);
-          
-        });
-        console.log("-----------------------------------------------");
-      });
+          tableText.push(` ${headerRow.join('  ')}`);
+         
+        
+          // Genera las filas de datos
+          data.forEach((tuple:any) => {
+            const rowData = headers.map((header) => {
+              const value = tuple[header].value.toString();
+              return value.padEnd(20);
+            });
+            tableText.push(` ${rowData.join(' ')}`);
+           
+          });
+        
+          // Retorna la tabla completa como una cadena de texto
+          return tableText.join('\n');
+        };
+        result += generateTable(table.tuples, columns)
+      } catch {
+        result += 'Esta Tabla no contiene registros \n\n';
+        return result;
+      }
+    }else{
+      result += '->La tabla solicitada no existe'
     }
+    return result; 
   }
-
   //short_SELECT
   public short_select(name: string){
     const contextGlobal = this.getGlobal();
-
+    let result = ''; 
     console.log("-----------------------------------------------");
     if(contextGlobal.tables.has(name.toLowerCase())) {
       const table = contextGlobal.tables.get(name.toLowerCase())!;
       const nesdw = table.fields;
-      table.tuples.forEach((objeto) =>{
-        const valores = Object.values(objeto);
+      
+      try {
+         //Inicia metodo para tabular resultado 
+        const generate_table = (data:any) => {
+          const tableTexto = [];
+          const headers = Object.keys(data[0]);
 
-        nesdw.forEach((literal) => {  //id, nombre, colum
-          const indice = Object.keys(objeto).indexOf(literal.value);
-          console.log(`${literal.value}: ${valores[indice]["value"]}`);
-        })
-        console.log("-----------------------------------------------");
-      });
+          const headerRow = headers.map((header) => header.padEnd(20));
+
+          tableTexto.push(`${headerRow.join('\t')}\t\t`);
+        
+
+          data.forEach((tuple:any) => {
+            const rowData = headers.map((header) => {
+              const value = tuple[header].value.toString();
+              return value.padEnd(20);
+            });
+            tableTexto.push(`${rowData.join('\t')}\t\t`);
+    
+          });
+          return tableTexto.join('\n');
+        };
+        result += generate_table(table.tuples)
+      } catch (error){
+        result += 'Esta Tabla no contiene registros \n\n';
+        return result;
+      }
+     
+      
+     
+    }else{
+      result += '->La tabla solicitada no existe'
     }
+    return result;
   }
+
+  
   // SELECT [] WHERE REALACIONALES
-  public where_column_rela(column:[], id: string, colu_condi:string, opera: string, valor:any){
+  public where_column_rela(column:string[], id: string, colu_condi:string, opera: string, valor:any){
     const contexGlobal = this.getGlobal();
+    let result = '';
     if(contexGlobal.tables.has(id.toLowerCase())) {
       const table = contexGlobal.tables.get(id.toLowerCase())!;
-      const result = this.relacionales(table,column,colu_condi,opera,valor);
+      const resuldt = this.relacionales(table,column,colu_condi,opera,valor);
       // lista con resultados => iterarla 
-      result.forEach((literal) =>{
-        const valores = Object.values(literal);
-        column.forEach((lit)=>{
-          const indice = Object.keys(literal).indexOf(lit);
-          console.log(`${lit}: ${valores[indice]}`);
+      try{
+        const comClave = Object.keys(resuldt[0]);
+        const clavesFiltro = comClave.filter(key => column.includes(key));
+
+        function createTable(obj:any, keys: string[]){
+          return keys.map(key => obj[key]);
+        }
+        result += clavesFiltro.join('\t') + '\n';
+        resuldt.forEach(item => {
+          result += createTable(item, clavesFiltro).join('\t')+'\n';
         });
-        console.log("-----------------------------------------")
-      });
+      }catch{
+        result = "No hubo coincidencia para la consulta\n\n"
+      }  
       
+    }else{
+      result = "No existe la tabla que consulta\n\n";
     }
+    return result;
   }
 
   //SELECT * WHERE RELACIONALES
   public where_all_rela(id: string, column: string, opera: string, valor: any){
     const contextGlobal = this.getGlobal();
+    let result = '';
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
       const nesdw = table.fields.map(literal => literal.value);
       const resuldt = this.relacionales(table, nesdw, column, opera, valor); 
       //lista con resultados -> iterarrla 
 
-      resuldt.forEach((literal) =>{
-        const valores = Object.values(literal);
-        nesdw.forEach((lit)=>{
-          const indice = Object.keys(literal).indexOf(lit);
-          console.log(`${lit}: ${valores[indice]}`);
+      try{
+        const comClave = Object.keys(resuldt[0]);
+        function createTable(obj:any, keys: string[]){
+          return keys.map(key => obj[key]);
+        }
+        result += comClave.join('\t') + '\n';
+        resuldt.forEach(item => {
+          result += createTable(item, comClave).join('\t')+'\n';
         });
-        console.log("-----------------------------------------")
-      });
-      
+      }catch{
+        result = "No hubo coincidencia para la consulta\n\n"
+      }    
+    }else {
+      result = "No existe la tabla que consulta\n\n";
     }
+    return result;
   }
 
   //SELECT * WHERE relacion LOGIC relacion
     public where_all_logic(id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
     const contextGlobal = this.getGlobal();
+    let result = '';
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
       const nesdw = table.fields.map(literal => literal.value);
@@ -217,22 +282,53 @@ export class Context {
               return Object.keys(objeto1).every(clave => objeto2.hasOwnProperty(clave) && objeto2[clave] == objeto1[clave]);
             });
           });
-
+          //Inicia metodo para tabular resultado 
+          try{
+            const comClave = Object.keys(new_list[0]);
+            function createTable(obj:any, keys: string[]){
+              return keys.map(key => obj[key]);
+            }
+            result += comClave.join('\t') + '\n';
+            new_list.forEach(item => {
+              result += createTable(item, comClave).join('\t')+'\n';
+            });
+          }catch{
+            result = "No hubo coincidencia para la consulta\n\n"
+          }
+           
           console.log(new_list);
           break;
         case 'OR':
           const new_lista = result1.concat(result2).filter((objeto, indice, lista) => {
             return lista.findIndex(obj => JSON.stringify(obj) === JSON.stringify(objeto)) === indice;
           });
-          console.log(new_lista);
+          
+          //inicia metodo result 
+          try{
+            const comClave = Object.keys(new_lista[0]);
+            function createTable(obj:any, keys: string[]){
+              return keys.map(key => obj[key]);
+            }
+            result += comClave.join('\t') + '\n';
+            new_lista.forEach(item => {
+              result += createTable(item, comClave).join('\t')+'\n';
+            });
+          }catch{
+            result = "No hubo coincidencia para la consulta\n\n";
+          }
+
           break;
-      }
+      } //termina switch
       
+    }else{
+      result = "No existe la tabla que consulta\n\n";
     }
+    return result;
     }
 
     public where_column_logic(columnas: [],id:string, cond1:string, oper1:string, valor1:any, logic:string, cond2:string, oper2:string, valor2:any){
     const contextGlobal = this.getGlobal();
+    let result = '';
     if(contextGlobal.tables.has(id.toLowerCase())) {
       const table = contextGlobal.tables.get(id.toLowerCase())!;
       const nesdw = table.fields.map(literal => literal.value);
@@ -248,17 +344,43 @@ export class Context {
             });
           });
 
-          console.log(new_list);
+          try{
+            const comClave = Object.keys(new_list[0]);
+            function createTable(obj:any, keys: string[]){
+              return keys.map(key => obj[key]);
+            }
+            result += comClave.join('\t') + '\n';
+            new_list.forEach(item => {
+              result += createTable(item, comClave).join('\t')+'\n';
+            });
+          }catch{
+            result = "No hubo coincidencia para la consulta\n\n"
+          } 
           break;
         case 'OR':
           const new_lista = result1.concat(result2).filter((objeto, indice, lista) => {
             return lista.findIndex(obj => JSON.stringify(obj) === JSON.stringify(objeto)) === indice;
           });
-          console.log(new_lista);
+          
+          try{
+            const comClave = Object.keys(new_lista[0]);
+            function createTable(obj:any, keys: string[]){
+              return keys.map(key => obj[key]);
+            }
+            result += comClave.join('\t') + '\n';
+            new_lista.forEach(item => {
+              result += createTable(item, comClave).join('\t')+'\n';
+            });
+          }catch{
+            result = "No hubo coincidencia para la consulta\n\n";
+          }
           break;
       }
       
+    }else{
+      result = "No existe la tabla que consulta\n\n";
     }
+    return result;
     }
 
   //UPDATE RELACIONALES 

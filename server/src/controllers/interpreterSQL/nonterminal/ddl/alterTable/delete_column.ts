@@ -8,6 +8,9 @@ export class delete_column extends AbstractSQLExpression {
     }
 
     public interpret(context: Context){
+        let result = '';
         context.delete_column(this.name, this.name_column);
+        result += '-> Se elimino la columna '+this.name_column+' De la tabla: '+this.name+'\n\n';
+        return result; 
     }
 }

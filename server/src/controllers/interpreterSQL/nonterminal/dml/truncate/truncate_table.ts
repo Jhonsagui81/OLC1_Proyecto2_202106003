@@ -10,6 +10,8 @@ export class truncate_table extends AbstractSQLExpression {
     }
 
     public interpret(context: Context) {
+        let result = "->Se eliminaron todos los registros de la tabla: "+this.id+"\n\n";
         context.truncate_table(this.id);
+        return result; 
     }
 }

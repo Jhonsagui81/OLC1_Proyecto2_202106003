@@ -12,4 +12,5 @@ export abstract class AbstractSQLExpression {
 
     //Metodo abstracto para ejecutar codigo de las clases que van a heredar 
   public abstract interpret(context: Context): any;
+  // public abstract getValue(tree:Tree, context: Context): any;
 }

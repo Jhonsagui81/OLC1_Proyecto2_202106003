@@ -8,6 +8,9 @@ export class delete_table extends AbstractSQLExpression {
     }
 
     public interpret(context: Context){
+        let result = '';
        context.delete_table(this.name);
+       result += '-> Se elimino la tabla: '+this.name+'\n\n';
+       return result; 
     }
 }

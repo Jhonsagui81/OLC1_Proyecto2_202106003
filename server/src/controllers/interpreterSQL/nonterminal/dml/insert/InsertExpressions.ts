@@ -13,17 +13,21 @@ export class InsertExpression extends AbstractSQLExpression {
     }
   
     public interpret(context : Context){
+      let result = '';
         if (this.fields.length == this.values.length) { //valida si los atributos recolectados es igual a la de los valores
             // insertar la tupla en la tabla
             // obtener los valores en un arreglo
+            
             const values = this.values.map((item) => { //iterar los valores
               const value = item.interpret(context); //cada valor ejecu
               return value;
             });
             context.Insert(this.name.toString().toLocaleLowerCase(),this.fields,values);
+            result += '-> Se inserto un registro a la tabla: '+this.name+'\n\n';
           } else {
-            console.log("Error: la cantidad de campos no coincide con la cantidad de valores");
+            result += "Error: la cantidad de campos no coincide con la cantidad de valores a insertar \n\n";
           }
+      return result;
         
     }
 }

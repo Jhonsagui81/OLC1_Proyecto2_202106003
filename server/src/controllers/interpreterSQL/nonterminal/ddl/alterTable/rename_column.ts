@@ -8,6 +8,9 @@ export class rename_column extends AbstractSQLExpression {
     }
 
     public interpret(context: Context){
+        let result = '';
         context.rename_column(this.name_table, this.name_column, this.new_name);
+        result += '-> Se renombro la columna '+this.name_column+' a '+this.new_name+' de la tabla: '+this.name_table+'\n\n';
+        return result; 
     }
 }

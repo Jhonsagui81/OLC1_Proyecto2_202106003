@@ -16,10 +16,12 @@ export class where_all_relaci extends AbstractSQLExpression {
 
         public interpret(context: Context) {
             let exp = this.expre.interpret(context);  //retorno value, type
-            
-            console.log("\nRESULTADO DE CONSULTA SELECT [...] FROM "+this.name_table+" WHERE "+this.name_colum_condicion+" "+this.operador+" "+exp.value+"\n");
+            let result = '';
+            result += "->CONSULTA SELECT * FROM "+this.name_table+" WHERE "+this.name_colum_condicion+" "+this.operador+" "+exp.value+"\n";
         
-            context.where_all_rela(this.name_table, this.name_colum_condicion, this.operador, exp.value);
+            result += context.where_all_rela(this.name_table, this.name_colum_condicion, this.operador, exp.value);
+            result += '\n\n';
+            return result; 
            // context.while_all(this.name_table, this.name_colum_condicion, this.operador, )
 
 
