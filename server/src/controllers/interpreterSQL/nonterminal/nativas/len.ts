@@ -5,26 +5,27 @@ import { LiteralExpression } from "../../terminal/LiteralExpression";
 import { aritmetica } from "../../terminal/aritmetica";
 import { id } from "../../terminal/id";
 
-export class Print extends AbstractSQLExpression {
-    public expres1: any;
-    constructor(line:number, column:number, public exp: LiteralExpression | id | aritmetica ){
+export class Len extends AbstractSQLExpression{
+    constructor(line:number, column: number, private cadena: LiteralExpression|id|aritmetica){
         super(line, column);
-        this.expres1 = undefined;
+
+    }
+    public interpret(context: Context) {
+        let exp = this.cadena.interpret(context); 
+        let result = ''; 
+        result += exp?.value.length.toString() +"\n\n"
+        return result
     }
 
-    public interpret(context: Context) {
-        let result = '';
-        let exp = this.exp.interpret(context); 
-        this.expres1 = exp?.value; 
-        return result += exp?.value+"\n\n";
-    }
     public getAST(): Node {
         let node: Node = new Node("NATIVA");
-        node.addChild("PRINT");
+        node.addChild("SELECT");
+        node.addChild("UPPER");
+        node.addChild("(");
         let nodeID: Node = new Node("EXP");     
-        nodeID.addChildsNode(this.exp.getAST());
+        nodeID.addChildsNode(this.cadena.getAST());
         node.addChildsNode(nodeID);
-
-        return node; 
+        node.addChild(")")
+        return node;
     }
 }

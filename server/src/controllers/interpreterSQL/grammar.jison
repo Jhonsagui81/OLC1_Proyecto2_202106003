@@ -78,6 +78,11 @@
 
 // --------------> nativas
 "PRINT"       return 'TK_PRINT';
+"lower"       return 'TK_LOWER'; 
+"upper"       return 'TK_UPPER'; 
+"round"       return 'TK_ROUND'; 
+"len"         return 'TK_LEN';
+"typeof"      return 'TK_TYPEOF';
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -156,6 +161,15 @@
   const {set} = require('./nonterminal/declara_variables/set');
   const {varias_var} = require('./nonterminal/declara_variables/varias');
 
+  //Nativas 
+  const {Print} = require('./nonterminal/nativas/print');
+  const {Lower} = require('./nonterminal/nativas/lower');
+  const {Upper} = require('./nonterminal/nativas/upper'); 
+  const {Round} = require('./nonterminal/nativas/round');
+  const {Len} = require('./nonterminal/nativas/len');
+  const {Truncate} = require('./nonterminal/nativas/truncate');
+  const {Typeof} = require('./nonterminal/nativas/typeof'); 
+
 %}
 
 // ------> Precedencia
@@ -188,12 +202,11 @@ instrucciones
 instruccion_global
 	: ddl   TK_PTCOMA                     { $$ = $1; }
 	| dml   TK_PTCOMA                     { $$ = $1; }
-  |declaracion TK_PTCOMA              { $$ = $1; }
   //| funciones TK_PTCOMA                 { $$ = $1; }
   //| metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
   | nativas TK_PTCOMA     { $$ = $1; }
-	| error 
+	| error TK_PTCOMA
   	{   
       console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
       Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
@@ -201,7 +214,7 @@ instruccion_global
 ;
 
 bloques
-  : TK_BEGIN instrucciones TK_END  { $$ = new bloque(@1.first_line, @1.first_column, $2); }
+  : TK_BEGIN instrucciones_locales TK_END  { $$ = new bloque(@1.first_line, @1.first_column, $2); }
 ;
 
 instrucciones_locales
@@ -218,6 +231,11 @@ instrucci_local
   |nativas  TK_PTCOMA                          { $$ = $1; }
   //|sentencias_control
   //|sebtencias_ciclicas
+  | error TK_PTCOMA
+  	{   
+      console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
+      Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
+    }
 ;
 
 declaracion
@@ -336,7 +354,20 @@ delete
 
 
 nativas
-  :  TK_PRINT exp    { $$ = new print(); }
+  :  TK_PRINT exp    
+  { $$ = new Print(@1.first_line, @1.first_column, $2); }
+  | TK_SELECT TK_LOWER TK_PARIZQ exp TK_PARDER   
+  {$$ = new Lower(@1.first_line, @1.first_column, $4); }
+  | TK_SELECT TK_UPPER TK_PARIZQ exp TK_PARDER
+  {$$ = new Upper(@1.first_line, @1.first_column, $4); }
+  | TK_SELECT TK_ROUND TK_PARIZQ exp TK_COMA TK_ENTERO TK_PARDER
+  {$$ = new Round(@1.first_line, @1.first_column, $4, $6 ); }
+  | TK_SELECT TK_LEN TK_PARIZQ exp TK_PARDER
+  {$$ = new Len(@1.first_line, @1.first_column, $4); }
+  |TK_SELECT TK_TRUNCATE TK_PARIZQ exp TK_COMA TK_ENTERO TK_PARDER
+  {$$ = new Truncate(@1.first_line, @1.first_column, $4, $6); }
+  |TK_SELECT TK_TYPEOF TK_PARIZQ exp TK_PARDER
+  {$$ = new Typeof(@1.first_line, @1.first_column, $4); }
 ;
 
 insertar
