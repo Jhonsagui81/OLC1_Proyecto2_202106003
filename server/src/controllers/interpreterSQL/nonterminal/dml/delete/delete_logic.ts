@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
 import { Context } from "../../../abstract/Context";
+import { Node } from "../../../abstract/Node";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
 
@@ -25,5 +26,8 @@ export class delete_logic extends AbstractSQLExpression {
             result += "->DELETE FROM "+this.id+" WHERE "+ this.condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.condi2+" "+this.opera2+" "+exp2.value+"\n\n";
             context.delete_logicos(this.id, this.condi1, this.opera1, exp1.value, this.logic, this.condi2, this.opera2, exp2.value);
             return result; 
+        }
+        public getAST(): Node {
+            return new Node("");
         }
 }

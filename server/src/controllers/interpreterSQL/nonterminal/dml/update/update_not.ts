@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
 import { Context } from "../../../abstract/Context";
+import { Node } from "../../../abstract/Node";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
 import { columna_update } from "./colum_update";
@@ -58,5 +59,8 @@ export class update_logic_not extends AbstractSQLExpression {
             //llamar al metodo 
             context.update_relacionales(this.id, fields, this.column_condi, this.oper_verdadero, exp.value);
             return result; 
+        }
+        public getAST(): Node {
+            return new Node("");
         }
 }

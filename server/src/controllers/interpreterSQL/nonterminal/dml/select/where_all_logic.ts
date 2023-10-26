@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { Context } from '../../../abstract/Context';
+import { Node } from '../../../abstract/Node';
 import { LiteralExpression } from '../../../terminal/LiteralExpression';
 import { id } from '../../../terminal/id';
 
@@ -27,5 +28,8 @@ export class where_all_logic extends AbstractSQLExpression {
             result += context.where_all_logic(this.name_table, this.condicion1, this.oper1, exp1.value, this.logic, this.condicion2, this.oper2, exp2.value);
             result += '\n\n';
             return result;
+        }
+        public getAST(): Node {
+            return new Node("");
         }
 }

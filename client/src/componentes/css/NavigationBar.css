@@ -20,8 +20,8 @@
   }
   .archivo-menu {
     position: absolute;
-    top: 10%; /* Coloca el menú debajo del elemento "Archivo" */
-    left: 10%;
+    top: 7%; /* Coloca el menú debajo del elemento "Archivo" */
+    left: 14%;
     display: flex;
     flex-direction: column;
     background-color: #333; /* Fondo blanco */
@@ -30,13 +30,35 @@
     z-index: 1; /* Asegura que el menú esté por encima de otras cajas */
 
   }
+
+  .reportes-menu{
+    position: absolute;
+    top: 7%; /* Coloca el menú debajo del elemento "Archivo" */
+    left: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: #333; /* Fondo blanco */
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 1; 
+  }
   
-  .archivo-menu div {
-    opacity: 0; /* Inicialmente, las subopciones son transparentes */
-    transition: opacity 0.3s; /* Agrega una transición de opacidad */
+   .archivo-menu div {
+    opacity: 0; 
+    transition: opacity 0.3s; 
   }
   
   .nav-item:hover .archivo-menu div {
-    opacity: 1; /* Cuando pasas el puntero sobre una subopción, se vuelve visible */
-    pointer-events: auto; /* Permite interactuar con la subopción cuando es visible */
+    opacity: 1; 
+    pointer-events: auto; 
+  } 
+
+  .reportes-menu div {
+    opacity: 0; 
+    transition: opacity 0.35s; 
   }
+  
+  .nav-item:hover .reportes-menu div {
+    opacity: 1; 
+    pointer-events: auto; 
+  } 

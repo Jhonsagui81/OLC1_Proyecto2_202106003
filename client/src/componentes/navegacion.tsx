@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import fileDownload from 'js-file-download'; 
+import QuickChart from 'quickchart-js';
 import './css/NavigationBar.css';
+import Viz from '../../node_modules/viz.js';
+import { Module, render } from 'viz.js/full.render.js';
+import GraphRenderer from '../componentes/Render';
 
 interface NavigationBarProps {
   setEditorContent: (content: string) => void;
@@ -14,6 +18,12 @@ interface NavigationBarProps {
 const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEditorContent2, addNewTab, getEditorContent, setTabs, tabs }) => {
   const [isArchivoOpen, setIsArchivoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<number | null>(null);
+
+  const [dotContent, setDotContent] = useState<string>('');
+  const [ast, setAst] = useState('');
+  const [err, setErr] = useState('');
+  const [isReporte, setIsReporteOpen] = useState(false);
+
 
 
   const handleMouseEnter = () => {
@@ -86,11 +96,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
   
       if (response.ok) {
         // La solicitud se completó con éxito
-        const data = await response.text();
+        const data = await response.json();
         console.log("LA RESPUESTA ESA: "+data)
         console.log('Solicitud POST exitosa');
 
-        setEditorContent2(data);
+        setEditorContent2(data.console);
+        setAst(data.ast);
+        setErr(data.err)
 
       } else {
         // La solicitud falló
@@ -100,6 +112,53 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
       console.error('Error al enviar la solicitud POST:', error);
     }
   };
+
+  //Para parte de los REPORTES 
+ 
+  const generateGraph = () => {
+
+      setDotContent(ast);
+      const url = "https://quickchart.io/graphviz";
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          graph: dotContent,
+        }),
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const urlImagen = URL.createObjectURL(blob);
+          // Hacer algo con la URL de la imagen
+          
+          window.open(urlImagen);
+        });
+    };
+    // fileDownload(ast, "ast.dot");
+    const generateGraphError = () => {
+
+      const url = "https://quickchart.io/graphviz";
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          graph: err,
+        }),
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const urlImagen = URL.createObjectURL(blob);
+          // Hacer algo con la URL de la imagen
+          
+          window.open(urlImagen);
+        });
+    };
 
   //PARA GUARDAR DOCUMENTOS 
   const handleSaveFile = () => {
@@ -154,26 +213,46 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
     }
   };
 
+  const handleReportesEnter = () => {
+    setIsReporteOpen(true);
+  };
+
   return (
     <div className="navbar">
-      <div
-        className="nav-item"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        Archivo
-        {isArchivoOpen && (
-          <div className="archivo-menu">
-            <div onClick={handleNewFile}>Nuevo Archivo</div>
-            <div onClick={handleOpenFile}>Abrir Archivo</div>
-            <div onClick={handleSaveFile}>Guardar</div>
-            <div onClick={handleDeleteTab}>Eliminar Pestaña</div>
-          </div>
-        )}
+  <div
+    className="nav-item"
+    onMouseEnter={handleMouseEnter}
+    onMouseLeave={handleMouseLeave}
+  >
+    Archivo
+    {isArchivoOpen && (
+      <div className="archivo-menu">
+        <div onClick={handleNewFile}>Nuevo Archivo</div>
+        <div onClick={handleOpenFile}>Abrir Archivo</div>
+        <div onClick={handleSaveFile}>Guardar</div>
+        <div onClick={handleDeleteTab}>Eliminar Pestaña</div>
       </div>
-      <div className="nav-item" onClick={handleSendData}>Ejecutar</div>
-      <div className="nav-item">Reportes</div>
-    </div>
+    )}
+  </div>
+  <div className="nav-item" onClick={handleSendData}>
+    Ejecutar
+  </div>
+  <div
+    className="nav-item"
+    onMouseEnter={handleReportesEnter}
+    onMouseLeave={handleReportesEnter}
+  >
+    Reportes
+    {isReporte && (
+      <div className="reportes-menu">
+        <div onClick={generateGraph}>AST</div>
+        <div onClick={generateGraphError}>ERRORES</div>
+        <div>TOKENS</div>
+        <div>SYMBOL</div>
+      </div>
+    )}
+  </div>
+</div>
   );
 };
 

@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
 import { Context } from "../../../abstract/Context";
+import { Node } from "../../../abstract/Node";
 
 export class short_select extends AbstractSQLExpression {
 
@@ -12,5 +13,9 @@ export class short_select extends AbstractSQLExpression {
         result += context.short_select(this.name_table);    
         result += '\n\n';
         return result;
+    }
+
+    public getAST(): Node {
+        return new Node("");
     }
 }

@@ -22,3 +22,4 @@ const {truncate_table} = require('./nonterminal/dml/truncate/truncate_table');
 const {delete_relacional} = require('./nonterminal/dml/delete/delete_relaciona');
 const {delete_logic} = require('./nonterminal/dml/delete/delete_logic');
 const {delete_not} = require('./nonterminal/dml/delete/delete_not');
+const {Errors} = require('./tools/Errors');

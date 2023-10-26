@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../abstract/AbstractSQLExpression";
 import { Context } from "../../abstract/Context";
+import { Node } from "../../abstract/Node";
 
 export class bloque extends AbstractSQLExpression{
 
@@ -13,5 +14,9 @@ export class bloque extends AbstractSQLExpression{
         for (const exp of this.expresion){
             exp.interpret(NuevoContexto);
         }
+    }
+
+    public getAST(): Node {
+        return new Node("");
     }
 }

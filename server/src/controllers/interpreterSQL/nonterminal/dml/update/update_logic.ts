@@ -3,6 +3,7 @@ import { Context } from "../../../abstract/Context";
 import { columna_update } from "./colum_update";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
+import { Node } from "../../../abstract/Node";
 
 export class update_logic extends AbstractSQLExpression {
 
@@ -41,5 +42,8 @@ export class update_logic extends AbstractSQLExpression {
             result +=" WHERE "+this.column_condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.column_condi2+" "+this.opera2+" "+exp2.value+"\n\n";
             context.update_logic(this.id, fields, this.column_condi1, this.opera1, exp1.value, this.logic, this.column_condi2, this.opera2, exp2.value );
             return result; 
+        }
+        public getAST(): Node {
+            return new Node("");
         }
 }

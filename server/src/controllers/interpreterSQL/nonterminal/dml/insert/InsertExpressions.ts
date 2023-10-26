@@ -1,12 +1,13 @@
 
 import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { Context } from '../../../abstract/Context';
+import { Node } from '../../../abstract/Node';
 import { LiteralExpression } from '../../../terminal/LiteralExpression';
 
 export class InsertExpression extends AbstractSQLExpression {
 
 //Adicional al arreglo de columnas se agrega un arreglo de datos a insertar en el constructor
-    constructor( line: number, column: number,private name: String,
+    constructor( line: number, column: number,private name: string,
       private fields: [],private values: LiteralExpression[]) { //LiteralExpresion porque debe retornar tipas
       super(line, column);
         //nombre_tabla, lista_ids,  lista_valores
@@ -30,4 +31,33 @@ export class InsertExpression extends AbstractSQLExpression {
       return result;
         
     }
+
+    public getAST(): Node {
+      let node: Node = new Node("INSERT INTO");
+      let nodeID: Node = new Node("ID");
+      nodeID.addChild(this.name);
+      node.addChildsNode(nodeID);
+      node.addChild("(");
+      let node_co: Node = new Node("COLUMNS");
+
+      this.fields.forEach((elemento)=> {
+        node_co.addChild(elemento);
+      });
+
+      node.addChildsNode(node_co);
+      node.addChild(")");
+      node.addChild("VALUES");
+      node.addChild("(");
+
+      let node_va: Node = new Node("VALORES");
+      this.values.forEach((elemento)=> {
+        node_va.addChildsNode(elemento.getAST());
+      });
+
+      node.addChildsNode(node_va);
+      node.addChild(")");
+
+      return node; 
+
+  }
 }

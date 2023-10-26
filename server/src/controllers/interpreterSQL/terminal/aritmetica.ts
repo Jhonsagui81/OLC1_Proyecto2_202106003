@@ -3,6 +3,9 @@ import { LiteralExpression } from "./LiteralExpression";
 import { Context } from "../abstract/Context";
 import { id } from "./id";
 import { Type, Literal } from "../abstract/Return";
+import ReturnType from "../tools/ReturnType";
+import Tree from "../tools/Tree";
+import { Node } from "../abstract/Node";
 
 export class aritmetica extends AbstractSQLExpression{
 
@@ -223,12 +226,15 @@ export class aritmetica extends AbstractSQLExpression{
                 }
             
             
-        }
-
-        // if(this.operador == '+'){
-        //     this.valor = izq.valor + der.valor;
-        //     this.tipo = Type.INT;
-        //     return this;
-        // }
+        } 
     }
+
+    public getAST(): Node {
+        let node: Node = new Node(this.operador.toString());
+        node.addChildsNode(this.exp1.getAST());
+        node.addChildsNode(this.exp2.getAST());
+
+        return node; 
+    }
+  
 }

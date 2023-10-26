@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { Context } from '../../../abstract/Context';
+import { Node } from '../../../abstract/Node';
 
 export class delete_table extends AbstractSQLExpression {
 
@@ -12,5 +13,12 @@ export class delete_table extends AbstractSQLExpression {
        context.delete_table(this.name);
        result += '-> Se elimino la tabla: '+this.name+'\n\n';
        return result; 
+    }
+    public getAST(): Node {
+        let node: Node = new Node("DROP TABLE");
+        let nodeID: Node = new Node("ID");
+        nodeID.addChild(this.name);
+        node.addChildsNode(nodeID);
+        return node;
     }
 }

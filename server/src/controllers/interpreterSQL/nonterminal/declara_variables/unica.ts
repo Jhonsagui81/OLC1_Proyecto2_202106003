@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../abstract/AbstractSQLExpression";
 import { Context } from "../../abstract/Context";
+import { Node } from "../../abstract/Node";
 import { FieldExpression } from "../../terminal/FieldExpression";
 
 export class una_variable extends AbstractSQLExpression{
@@ -21,5 +22,9 @@ export class una_variable extends AbstractSQLExpression{
         this.tipo = valor.type;
 
         context.add_variable(this.nombre, this.tipo);
+    }
+
+    public getAST(): Node {
+        return new Node("");
     }
 }

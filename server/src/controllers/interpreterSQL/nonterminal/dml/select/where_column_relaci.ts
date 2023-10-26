@@ -3,6 +3,7 @@ import { Context } from "../../../abstract/Context";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
+import { Node } from "../../../abstract/Node";
 
 
 export class where_column_relaci extends AbstractSQLExpression {
@@ -30,6 +31,9 @@ export class where_column_relaci extends AbstractSQLExpression {
         result += context.where_column_rela(this.columnas, this.name_table, this.name_colum_condicion, this.operador, exp.value);
         result += '\n\n';
         return result; 
+    }
+    public getAST(): Node {
+        return new Node("");
     }
 
 }

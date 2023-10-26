@@ -4,6 +4,7 @@ import { LiteralExpression } from "../../terminal/LiteralExpression";
 import { aritmetica } from "../../terminal/aritmetica";
 import { id } from "../../terminal/id";
 import { FieldExpression } from "../../terminal/FieldExpression";
+import { Node } from "../../abstract/Node";
 
 export class set extends AbstractSQLExpression{
 
@@ -16,5 +17,9 @@ export class set extends AbstractSQLExpression{
         let expres = this.expresion.interpret(context);
         
         context.set_variable(this.id, expres?.value);
+    }
+
+    public getAST(): Node {
+        return new Node("");
     }
 }

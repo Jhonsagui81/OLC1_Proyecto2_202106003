@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
 import { Context } from "../../../abstract/Context";
+import { Node } from "../../../abstract/Node";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
 
@@ -19,5 +20,9 @@ export class delete_relacional extends AbstractSQLExpression {
             result += "->DELETE FROM "+this.id+" WHERE "+ this.column_condi+" "+this.oper+" "+exp1.value+"\n\n";
             context.delete_relacionales(this.id, this.column_condi, this.oper, exp1.value);
             return result; 
+        }
+
+        public getAST(): Node {
+            return new Node("");
         }
 }

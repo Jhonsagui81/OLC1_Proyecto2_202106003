@@ -2,12 +2,15 @@ import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { FieldExpression } from '../../../terminal/FieldExpression';
 import { Context } from '../../../abstract/Context';
 import { Table } from '../../../bd/Table';
+import Tree from '../../../tools/Tree';
+import ReturnType from '../../../tools/ReturnType';
+import { Node } from '../../../abstract/Node';
 
 export class CreateTableExpression extends AbstractSQLExpression {
 
-
-  constructor( line: number, column: number,private name: String,private fields: FieldExpression[]) {
+  constructor( line: number, column: number,private name: string,private fields: FieldExpression[]) {
     super(line, column);
+
   }
 
   public interpret(context: Context){  
@@ -21,6 +24,26 @@ export class CreateTableExpression extends AbstractSQLExpression {
     context.saveTable(this.name.toString(),new Table(this.name.toString(),fields));
     result += '-> Se creo tabla '+ this.name+'\n\n';
     return result;
+  }
+
+
+  public getAST(): Node {
+    let node: Node = new Node("CREATE TABLE");
+    let nodeID: Node = new Node("IDENTIFICADOR");
+    nodeID.addChild(this.name);
+    node.addChildsNode(nodeID);
+    node.addChild("(");
+    let nodeColum: Node = new Node("ENCABEZADOS");
+
+    this.fields.forEach((elemento)=> {
+      nodeColum.addChildsNode(elemento.getAST());
+    });
+
+    node.addChildsNode(nodeColum);
+    node.addChild(")");
+
+
+    return node; 
   }
 
 

@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
 import { Context } from "../../../abstract/Context";
+import { Node } from "../../../abstract/Node";
 import { column_update } from "../../../abstract/Return";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
@@ -15,5 +16,9 @@ export class columna_update extends AbstractSQLExpression {
         let exp = this.exp.interpret(context);
 
         return {valor: exp.value, id: this.name_column};
+    }
+
+    public getAST(): Node {
+        return new Node("");
     }
 }

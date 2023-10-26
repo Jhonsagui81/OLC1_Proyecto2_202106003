@@ -1,6 +1,9 @@
 import { AbstractSQLExpression } from '../abstract/AbstractSQLExpression'; //la clase principal
 import { Type, Literal } from '../abstract/Return';
 import { Context } from '../abstract/Context';
+import Tree from '../tools/Tree';
+import ReturnType from '../tools/ReturnType';
+import { Node } from '../abstract/Node';
 
 export class LiteralExpression extends AbstractSQLExpression { //herencia
 
@@ -69,6 +72,10 @@ export class LiteralExpression extends AbstractSQLExpression { //herencia
     }
     return this; 
 
+  }
+
+  public getAST(): Node {
+      return new Node(this.value);
   }
 
 

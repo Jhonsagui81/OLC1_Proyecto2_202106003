@@ -1,12 +1,15 @@
 import { AbstractSQLExpression } from '../abstract/AbstractSQLExpression';
 import { Type, Literal } from '../abstract/Return';
 import { Context } from '../abstract/Context';
+import ReturnType from '../tools/ReturnType';
+import Tree from '../tools/Tree';
+import { Node } from '../abstract/Node';
 
 export class FieldExpression extends AbstractSQLExpression {
 
 
   constructor( line: number, column: number,
-    private name: String,   //nombre  y el tipo 
+    private name: string,   //nombre  y el tipo 
     private type: Type
   ) {
     super(line, column);
@@ -18,5 +21,8 @@ export class FieldExpression extends AbstractSQLExpression {
     return {value: this.name, type: this.type};
   }
 
+  public getAST(): Node {
+      return new Node(this.name);
+  }
 
 }

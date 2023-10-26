@@ -4,6 +4,7 @@ import { LiteralExpression } from "../../terminal/LiteralExpression";
 import { aritmetica } from "../../terminal/aritmetica";
 import { id } from "../../terminal/id";
 import { FieldExpression } from "../../terminal/FieldExpression";
+import { Node } from "../../abstract/Node";
 
 export class declaracion extends AbstractSQLExpression{
 
@@ -25,6 +26,9 @@ export class declaracion extends AbstractSQLExpression{
         let expres = this.expresion.interpret(context);
 
         context.add_variable_dato(this.nombre, expres);
+    }
+    public getAST(): Node {
+        return new Node("");
     }
 }
 

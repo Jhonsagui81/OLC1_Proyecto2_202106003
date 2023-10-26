@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../abstract/AbstractSQLExpression";
 import { Context } from "../../abstract/Context";
+import { Node } from "../../abstract/Node";
 import { FieldExpression } from "../../terminal/FieldExpression";
 
 export class varias_var extends AbstractSQLExpression{
@@ -18,6 +19,9 @@ export class varias_var extends AbstractSQLExpression{
 
         context.add_varias_variables(fields);
 
+    }
+    public getAST(): Node {
+        return new Node("");
     }
 }
 

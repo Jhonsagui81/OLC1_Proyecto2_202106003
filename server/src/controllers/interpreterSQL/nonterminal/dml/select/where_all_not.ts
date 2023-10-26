@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { Context } from '../../../abstract/Context';
+import { Node } from '../../../abstract/Node';
 import { LiteralExpression } from '../../../terminal/LiteralExpression';
 import { id } from '../../../terminal/id';
 
@@ -45,5 +46,8 @@ export class where_all_not extends AbstractSQLExpression {
            // context.while_all(this.name_table, this.name_colum_condicion, this.operador, )
             result += '\n\n'
             return result;
+        }
+        public getAST(): Node {
+            return new Node("");
         }
 }

@@ -3,6 +3,7 @@ import { Context } from "../../../abstract/Context";
 import { columna_update } from "./colum_update";
 import { LiteralExpression } from "../../../terminal/LiteralExpression";
 import { id } from "../../../terminal/id";
+import { Node } from "../../../abstract/Node";
 
 export class update_relacional extends AbstractSQLExpression {
 
@@ -36,5 +37,8 @@ export class update_relacional extends AbstractSQLExpression {
             result += " WHERE "+this.column_condi+" "+this.opera+" "+exp.value+"\n\n";
             context.update_relacionales(this.id, fields, this.column_condi, this.opera, exp.value);
             return result; 
+        }
+        public getAST(): Node {
+            return new Node("");
         }
 }

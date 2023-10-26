@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from "../../../abstract/AbstractSQLExpression";
 import { Context } from "../../../abstract/Context";
+import { Node } from "../../../abstract/Node";
 
 
 export class truncate_table extends AbstractSQLExpression {
@@ -13,5 +14,8 @@ export class truncate_table extends AbstractSQLExpression {
         let result = "->Se eliminaron todos los registros de la tabla: "+this.id+"\n\n";
         context.truncate_table(this.id);
         return result; 
+    }
+    public getAST(): Node {
+        return new Node("");
     }
 }

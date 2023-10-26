@@ -1,5 +1,6 @@
 import { AbstractSQLExpression } from '../../../abstract/AbstractSQLExpression';
 import { Context } from '../../../abstract/Context';
+import { Node } from '../../../abstract/Node';
 //import { LiteralExpression } from '../../../terminal/LiteralExpression';
 
 export class simple_select extends AbstractSQLExpression {
@@ -25,4 +26,7 @@ export class simple_select extends AbstractSQLExpression {
       result += '\n\n'
       return result;
     }
+    public getAST(): Node {
+      return new Node("");
+  }
 }

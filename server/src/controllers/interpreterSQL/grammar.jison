@@ -104,10 +104,15 @@
 
 <<EOF>>                 return 'EOF';
 
-.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+.                       {
+                          console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                          Errors.addError("Lexico", `El caracter ${yytext} no pertenece al lenguaje`, yylloc.first_line, yylloc.first_column);
+                        }
 /lex
 
 %{
+  //Errores 
+  const {Errors} = require('./tools/Errors');
   // importar tipos
 	const {Type} = require('./abstract/Return');
 	const {FieldExpression} = require('./terminal/FieldExpression');
@@ -183,16 +188,20 @@ instrucciones
 instruccion_global
 	: ddl   TK_PTCOMA                     { $$ = $1; }
 	| dml   TK_PTCOMA                     { $$ = $1; }
+  |declaracion TK_PTCOMA              { $$ = $1; }
   //| funciones TK_PTCOMA                 { $$ = $1; }
   //| metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
   | nativas TK_PTCOMA     { $$ = $1; }
-	| error TK_PTCOMA
-  	{   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
+	| error 
+  	{   
+      console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
+      Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
+    }
 ;
 
 bloques
-  : TK_BEGIN instrucciones_locales TK_END  { $$ = new bloque(@1.first_line, @1.first_column, $2); }
+  : TK_BEGIN instrucciones TK_END  { $$ = new bloque(@1.first_line, @1.first_column, $2); }
 ;
 
 instrucciones_locales
