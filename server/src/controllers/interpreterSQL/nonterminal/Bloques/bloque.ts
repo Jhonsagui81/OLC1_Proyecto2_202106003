@@ -9,14 +9,34 @@ export class bloque extends AbstractSQLExpression{
     }
     
     public interpret(context: Context) { //contexto global
+        let result = '';
         let NuevoContexto = new Context(context);
         
         for (const exp of this.expresion){
-            exp.interpret(NuevoContexto);
+            try{
+                result += exp.interpret(NuevoContexto);
+            } catch (error:any){
+                console.error(`Se produjo un error al interpretar el objeto: ${error.message}`)
+            }
+            
         }
+        return result; 
     }
 
     public getAST(): Node {
-        return new Node("");
+        let node: Node = new Node("Entorno");
+        node.addChild("BEGIN");
+        let nodeInst: Node = new Node("INSTRUCIONES");
+        this.expresion.forEach((ele) => {
+            try{
+                nodeInst.addChildsNode(ele.getAST());
+            } catch {
+                
+            }
+            
+        });
+        node.addChildsNode(nodeInst);
+        node.addChild("END");
+        return node; 
     }
 }

@@ -30,10 +30,21 @@ export class LiteralExpression extends AbstractSQLExpression { //herencia
         this.type = Type.DOUBLE;
         break;
       case Type.DATE:
-        console.log("lorq tare ed"+this.value);
-        const partes = this.value.split("-");
-        this.value = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
-        this.type = Type.DATE;
+        // console.log("lorq tare ed"+this.value);
+        // let recortada = this.value.substring(1, this.value.length -1);
+        // const partes = recortada.split("-");
+        // this.value = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
+        // this.type = Type.DATE;
+        
+        
+        this.value = new Date(this.value);  
+        this.type = Type.DATE; 
+
+        // Formatear la fecha como 'YYYY-MM-DD'
+        const options = { day: '2-digit', month: '2-digit',year: 'numeric' };
+        this.value = this.value.toLocaleDateString(undefined, options);
+
+
         break;
       case Type.VARCHAR:
         const regex = /^\"/g;
@@ -60,10 +71,11 @@ export class LiteralExpression extends AbstractSQLExpression { //herencia
         break;
       case Type.NEGATIVE:
         if(this.value.type === Type.INT){
-          this.value.value = Number(this.value.value) * -1;
+          this.value = Number(this.value) * -1;
+
           this.type = Type.NEGATIVE;
         } else if (this.value.type === Type.DOUBLE){
-          this.value.value = parseFloat(this.value.value) * -1;
+          this.value = parseFloat(this.value) * -1;
           this.type = Type.NEGATIVE;
         }else{
           console.log("Error: no se puede negar este tipo de dato")

@@ -14,12 +14,23 @@ export class set extends AbstractSQLExpression{
     }
 
     public interpret(context: Context) {
+        let result = ' \n';
         let expres = this.expresion.interpret(context);
         
         context.set_variable(this.id, expres?.value);
+        return result; 
     }
 
     public getAST(): Node {
-        return new Node("");
+        let node: Node = new Node("ASIGNACION");
+        node.addChild("SET");
+        let nodeID: Node = new Node("ID");
+        nodeID.addChild(this.id);
+        node.addChildsNode(nodeID);
+        node.addChild("=");
+        let nodeValue: Node = new Node("VALUE");
+        nodeValue.addChildsNode(this.expresion.getAST());
+        node.addChildsNode(nodeValue);
+        return node; 
     }
 }

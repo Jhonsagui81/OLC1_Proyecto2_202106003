@@ -32,9 +32,19 @@ class InterpreteController {
       tree = new Tree(ast);
         
         const globalContext = new Context(null);
-        for (const inst of ast){
-          result += inst.interpret(globalContext);
+        try{
+          for (const inst of ast){
+            result += inst.interpret(globalContext);
+          }
+        }catch{
+          result += "Su codigo contiene errores"
+          res.json({
+            "console": result,
+            "ast": "",
+            "err": Errors.getErrors()
+          })
         }
+        
 
         	
         // res.json({ consola:"ejecutado correctamente", errores: "ninguno" });
@@ -50,7 +60,7 @@ class InterpreteController {
     let asts= tree.getDot(rootAST, false);
     console.log("HASDFJASKD: "+asts);
     
-    console.log(Errors.getErrors())
+    
     res.json({
       "console": result,
       "ast": asts,

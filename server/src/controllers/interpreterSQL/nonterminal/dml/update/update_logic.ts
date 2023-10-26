@@ -32,20 +32,25 @@ export class update_logic extends AbstractSQLExpression {
             this.expres2 = exp2.value; 
             let result =''; 
 
-            const fields = this.lista.map((elemento) =>{
-                const value = elemento.interpret(context);
-                return value;
-            });
-            result+="-> UPDATE "+this.id+" SET ";
-            let neww = '';
-            fields.forEach((ele) =>{
-                neww += ele.id+" = "+ele.valor+", ";
-            });
+            try{
+                const fields = this.lista.map((elemento) =>{
+                    const value = elemento.interpret(context);
+                    return value;
+                });
+                result+="-> UPDATE "+this.id+" SET ";
+                let neww = '';
+                fields.forEach((ele) =>{
+                    neww += ele.id+" = "+ele.valor+", ";
+                });
+                    
                 
+                result += neww.slice(0, -2)    
+                result +=" WHERE "+this.column_condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.column_condi2+" "+this.opera2+" "+exp2.value+"\n\n";
+                context.update_logic(this.id, fields, this.column_condi1, this.opera1, exp1.value, this.logic, this.column_condi2, this.opera2, exp2.value );
+            } catch{
+
+            }
             
-            result += neww.slice(0, -2)    
-            result +=" WHERE "+this.column_condi1+" "+this.opera1+" "+exp1.value+" "+this.logic+" "+this.column_condi2+" "+this.opera2+" "+exp2.value+"\n\n";
-            context.update_logic(this.id, fields, this.column_condi1, this.opera1, exp1.value, this.logic, this.column_condi2, this.opera2, exp2.value );
             return result; 
         }
         public getAST(): Node {
@@ -56,9 +61,14 @@ export class update_logic extends AbstractSQLExpression {
             node.addChildsNode(nodeID);
             node.addChild("SET");
             let node_colu: Node = new Node("COLUMNAS");
-            this.lista.forEach((ele) => {
-                node_colu.addChildsNode(ele.getAST());
-            });
+            try{
+                this.lista.forEach((ele) => {
+                    node_colu.addChildsNode(ele.getAST());
+                });
+            }catch{
+                
+            }
+            
             node.addChildsNode(node_colu); 
             node.addChild("WHERE"); 
 

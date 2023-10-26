@@ -18,12 +18,16 @@ export class InsertExpression extends AbstractSQLExpression {
         if (this.fields.length == this.values.length) { //valida si los atributos recolectados es igual a la de los valores
             // insertar la tupla en la tabla
             // obtener los valores en un arreglo
-            
+          try{
             const values = this.values.map((item) => { //iterar los valores
               const value = item.interpret(context); //cada valor ejecu
               return value;
             });
             context.Insert(this.name.toString().toLocaleLowerCase(),this.fields,values);
+          } catch{
+
+          }
+            
             result += '-> Se inserto un registro a la tabla: '+this.name+'\n\n';
           } else {
             result += "Error: la cantidad de campos no coincide con la cantidad de valores a insertar \n\n";
@@ -39,21 +43,27 @@ export class InsertExpression extends AbstractSQLExpression {
       node.addChildsNode(nodeID);
       node.addChild("(");
       let node_co: Node = new Node("COLUMNS");
+      try{
+        this.fields.forEach((elemento)=> {
+          node_co.addChild(elemento);
+        });
+      } catch{
 
-      this.fields.forEach((elemento)=> {
-        node_co.addChild(elemento);
-      });
-
+      }
       node.addChildsNode(node_co);
       node.addChild(")");
       node.addChild("VALUES");
       node.addChild("(");
 
       let node_va: Node = new Node("VALORES");
-      this.values.forEach((elemento)=> {
-        node_va.addChildsNode(elemento.getAST());
-      });
+      try{
+        this.values.forEach((elemento)=> {
+          node_va.addChildsNode(elemento.getAST());
+        });
+      }catch{
 
+      }
+      
       node.addChildsNode(node_va);
       node.addChild(")");
 

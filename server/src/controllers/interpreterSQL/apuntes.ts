@@ -29,3 +29,4 @@ const {Upper} = require('./nonterminal/nativas/upper');
 const {Round} = require('./nonterminal/nativas/round');
 const {Len} = require('./nonterminal/nativas/len');
 const {Truncate} = require('./nonterminal/nativas/truncate');
+const {Typeof} = require('./nonterminal/nativas/typeof'); 

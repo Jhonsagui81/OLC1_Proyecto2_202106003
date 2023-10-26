@@ -16,12 +16,20 @@ export class CreateTableExpression extends AbstractSQLExpression {
   public interpret(context: Context){  
     //Permite recorrer todo lo que recibe atributo fields
     let result = '';
-    const fields = this.fields.map((item) => { 
-      const value = item.interpret(context); //referencia a las columnas retorna valor, type
-      return value; //retorna a la variable fields local 
-    });
+   
+    try{
+      const fields = this.fields.map((item) => { 
+        const value = item.interpret(context); //referencia a las columnas retorna valor, type
+        return value; //retorna a la variable fields local 
+        
+      });
+      context.saveTable(this.name.toString(),new Table(this.name.toString(),fields));
+    }catch{
+
+    }
+    
     // se crea una tabla con el nombre:
-    context.saveTable(this.name.toString(),new Table(this.name.toString(),fields));
+    
     result += '-> Se creo tabla '+ this.name+'\n\n';
     return result;
   }
@@ -36,7 +44,12 @@ export class CreateTableExpression extends AbstractSQLExpression {
     let nodeColum: Node = new Node("ENCABEZADOS");
 
     this.fields.forEach((elemento)=> {
-      nodeColum.addChildsNode(elemento.getAST());
+      try{
+        nodeColum.addChildsNode(elemento.getAST());
+      } catch {
+
+      }
+      
     });
 
     node.addChildsNode(nodeColum);

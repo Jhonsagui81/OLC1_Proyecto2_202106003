@@ -19,6 +19,7 @@ export class declaracion extends AbstractSQLExpression{
     }
 
     public interpret(context: Context) {
+        let result = '\n';
         let valor = this.id.interpret(context);
         this.nombre = valor.value;
         this.tipo = valor.type;
@@ -26,9 +27,20 @@ export class declaracion extends AbstractSQLExpression{
         let expres = this.expresion.interpret(context);
 
         context.add_variable_dato(this.nombre, expres);
+        return result; 
     }
     public getAST(): Node {
-        return new Node("");
+        let node: Node = new Node("DECLARACION");
+        node.addChild("DECLARE");
+        let nodeID: Node = new Node("ID");
+        nodeID.addChildsNode(this.id.getAST());
+        node.addChildsNode(nodeID);
+        node.addChild("DEFAULT");
+        let nodeValue: Node = new Node("VALUE");
+        nodeValue.addChildsNode(this.expresion.getAST());
+        node.addChildsNode(nodeValue);
+        return node; 
+
     }
 }
 

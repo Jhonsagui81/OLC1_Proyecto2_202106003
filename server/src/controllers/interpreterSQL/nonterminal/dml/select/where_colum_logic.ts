@@ -47,9 +47,14 @@ export class where_colum_logic extends AbstractSQLExpression {
             let node: Node = new Node("SELECT");
             node.addChild("SELECT");
             let node_colu: Node = new Node("COLUMNAS");
-            this.columnas.forEach((ele) => {
-                node_colu.addChild(ele);
-            });
+            try{
+                this.columnas.forEach((ele) => {
+                    node_colu.addChild(ele);
+                });
+            } catch{
+                
+            }
+            
             node.addChildsNode(node_colu);
             node.addChild("FROM")
             let nodeID: Node = new Node("ID");

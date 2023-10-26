@@ -53,7 +53,6 @@ export class Context {
       if(!env.symbolTable.has(id.toLowerCase())){ //si esta variable no esta en la tabla
         env.symbolTable.set(id.toLowerCase(), symbol); 
         //funcion para mostrar variables
-        this.getVariables();
       } else {
         console.log("Error la variable "+id+" Ya existe en el entorno");
       }

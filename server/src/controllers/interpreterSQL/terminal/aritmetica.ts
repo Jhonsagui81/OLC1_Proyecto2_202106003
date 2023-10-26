@@ -12,11 +12,13 @@ export class aritmetica extends AbstractSQLExpression{
 
     public value: any;
     public type: any;
+    public format: any; 
 
-    constructor(line:number, column:number, private exp1: LiteralExpression | id, private operador: string, private exp2: LiteralExpression | id ){
+    constructor(line:number, column:number, private exp1: LiteralExpression | id |aritmetica, private operador: string, private exp2: LiteralExpression | id|aritmetica ){
         super(line, column);
         this.value = null;    
         this.type = null; 
+        this.format =  { day: '2-digit', month: '2-digit',year: 'numeric' };
 
     }
 
@@ -27,64 +29,79 @@ export class aritmetica extends AbstractSQLExpression{
         
         switch(this.operador){
             case '+':
-                if(izq.type == Type.INT && der.type == Type.INT){
-                    this.value = izq.value + der.value;
+                if(izq?.type == Type.INT && der?.type == Type.INT){
+                    this.value = izq?.value + der.value;
                     this.type = Type.INT;
                     return this;
-                } else if(izq.type == Type.INT && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) + der.value;
+                } else if(izq?.type == Type.INT && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) + der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.INT && der.type == Type.DATE){
-                    this.value = der.value.setDate(der.value.getDate() + izq.value);
+                } else if(izq?.type == Type.INT && der?.type == Type.DATE){
+                    const fecha = new Date(der?.value);
+                    this.value = fecha.setDate(fecha.getDate() + izq?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.INT && der.type == Type.VARCHAR){
-                    this.value = izq.value + parseInt(der.value);
+                } else if(izq?.type == Type.INT && der?.type == Type.VARCHAR){
+                    this.value = izq?.value + parseInt(der?.value);
                     this.type = Type.INT;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.INT){
-                    this.value = parseFloat(izq.value) + parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.INT){
+                    this.value = parseFloat(izq?.value) + parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DOUBLE){
-                    this.value = izq.value + der.value;
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DOUBLE){
+                    this.value = izq?.value + der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DATE){
-                    this.value = der.value.setDate(der.value.getDate() + izq.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DATE){
+                    const fecha = new Date(der?.value);
+                    this.value = fecha.setDate(fecha.getDate() + izq?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.VARCHAR){
-                    this.value = izq.value + parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.VARCHAR){
+                    this.value = izq?.value + parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DATE && der.type == Type.INT){
-                    this.value = izq.value.setDate(izq.value.getDate() + der.value);
+                } else if(izq?.type == Type.DATE && der?.type == Type.INT){
+                    const fecha = new Date(izq?.value);
+                    this.value = fecha.setDate(fecha.getDate() + der?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.DATE && der.type == Type.DOUBLE){
-                    this.value = izq.value.setDate(izq.value.getDate() + der.value);
+                } else if(izq?.type == Type.DATE && der?.type == Type.DOUBLE){
+                    const fecha = new Date(izq?.value);
+                    this.value = fecha.setDate(fecha.getDate() + der?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.VARCHAR){
-                    this.value = izq.value.setDate(izq.value.getDate() + parseInt(der.value));
+                } else if(izq?.type == Type.DATE && der?.type == Type.VARCHAR){
+                    const fecha = new Date(izq?.value);
+                    this.value = fecha.setDate(fecha.getDate() + parseInt(der?.value));
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.INT){
-                    this.value = parseInt(izq.value) + der.value;
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.INT){
+                    this.value = parseInt(izq?.value) + der?.value;
                     this.type = Type.INT;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) + der.value;
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) + der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.DATE){
-                    this.value = der.value.setDate(der.value.getDate() + parseInt(der.value));
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.DATE){
+                    this.value = der?.value.setDate(der?.value.getDate() + parseInt(der?.value));
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.VARCHAR){
-                    this.value = izq.value + der.value
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.VARCHAR){
+                    this.value = izq?.value + der?.value
                     this.type = Type.VARCHAR;
                     return this;
                 }else{
@@ -93,64 +110,79 @@ export class aritmetica extends AbstractSQLExpression{
                     return this;
                 }
             case '-':
-                if(izq.type == Type.INT && der.type == Type.INT){
-                    this.value = izq.value - der.value;
+                if(izq?.type == Type.INT && der?.type == Type.INT){
+                    this.value = izq?.value - der?.value;
                     this.type = Type.INT;
                     return this;
-                } else if(izq.type == Type.INT && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) - der.value;
+                } else if(izq?.type == Type.INT && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) - der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.INT && der.type == Type.DATE){
-                    this.value = der.value.setDate(der.value.getDate() - izq.value);
+                } else if(izq?.type == Type.INT && der?.type == Type.DATE){
+                    const fecha = new Date(der?.value);
+                    this.value = fecha.setDate(fecha.getDate() - izq?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.INT && der.type == Type.VARCHAR){
-                    this.value = izq.value - parseInt(der.value);
+                } else if(izq?.type == Type.INT && der?.type == Type.VARCHAR){
+                    this.value = izq?.value - parseInt(der?.value);
                     this.type = Type.INT;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.INT){
-                    this.value = parseFloat(izq.value) - parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.INT){
+                    this.value = parseFloat(izq?.value) - parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DOUBLE){
-                    this.value = izq.value - der.value;
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DOUBLE){
+                    this.value = izq?.value - der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DATE){
-                    this.value = der.value.setDate(der.value.getDate() - izq.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DATE){
+                    const fecha = new Date(der?.value);
+                    this.value = fecha.setDate(fecha.getDate() - izq?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.VARCHAR){
-                    this.value = izq.value - parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.VARCHAR){
+                    this.value = izq?.value - parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DATE && der.type == Type.INT){
-                    this.value = izq.value.setDate(izq.value.getDate() - der.value);
+                } else if(izq?.type == Type.DATE && der?.type == Type.INT){
+                    const fecha = new Date(izq?.value);
+                    this.value = fecha.setDate(fecha.getDate() - der?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.DATE && der.type == Type.DOUBLE){
-                    this.value = izq.value.setDate(izq.value.getDate() - der.value);
+                } else if(izq?.type == Type.DATE && der?.type == Type.DOUBLE){
+                    const fecha = new Date(izq?.value);
+                    this.value = fecha.setDate(fecha.getDate() - der?.value);
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.VARCHAR){
-                    this.value = izq.value.setDate(izq.value.getDate() - parseInt(der.value));
+                } else if(izq?.type == Type.DATE && der?.type == Type.VARCHAR){
+                    const fecha = new Date(izq?.value);
+                    this.value = fecha.setDate(fecha.getDate() - parseInt(der?.value));
+                    //formata 
+                    this.value = fecha.toLocaleDateString(undefined, this.format)
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.INT){
-                    this.value = parseInt(izq.value) - der.value;
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.INT){
+                    this.value = parseInt(izq?.value) - der?.value;
                     this.type = Type.INT;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) - der.value;
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) - der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.DATE){
-                    this.value = der.value.setDate(der.value.getDate() - parseInt(der.value));
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.DATE){
+                    this.value = der?.value.setDate(der?.value.getDate() - parseInt(der?.value));
                     this.type = Type.DATE;
                     return this;
-                } else if(izq.type == Type.VARCHAR && der.type == Type.VARCHAR){
-                    this.value = izq.value - der.value
+                } else if(izq?.type == Type.VARCHAR && der?.type == Type.VARCHAR){
+                    this.value = izq?.value - der?.value
                     this.type = Type.VARCHAR;
                     return this;
                 }else{
@@ -159,20 +191,20 @@ export class aritmetica extends AbstractSQLExpression{
                     return this;
                 }
             case '*':
-                if(izq.type == Type.INT && der.type == Type.INT ){
-                    this.value = izq.value * der.value;
+                if(izq?.type == Type.INT && der?.type == Type.INT ){
+                    this.value = izq?.value * der?.value;
                     this.type = Type.INT
                     return this; 
-                } else if(izq.type == Type.INT && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) * der.value;
+                } else if(izq?.type == Type.INT && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) * der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.INT){
-                    this.value = izq.value * parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.INT){
+                    this.value = izq?.value * parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DOUBLE){
-                    this.value = izq.value * der.value;
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DOUBLE){
+                    this.value = izq?.value * der?.value;
                     this.type = Type.DOUBLE;
                     return this;
                 }else{
@@ -181,20 +213,20 @@ export class aritmetica extends AbstractSQLExpression{
                     return this;
                 }
             case '/':
-                if(izq.type == Type.INT && der.type == Type.INT ){
-                    this.value = izq.value / der.value;
+                if(izq?.type == Type.INT && der?.type == Type.INT ){
+                    this.value = izq?.value / der?.value;
                     this.type = Type.INT
                     return this; 
-                } else if(izq.type == Type.INT && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) / der.value;
+                } else if(izq?.type == Type.INT && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) / der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.INT){
-                    this.value = izq.value / parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.INT){
+                    this.value = izq?.value / parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DOUBLE){
-                    this.value = izq.value / der.value;
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DOUBLE){
+                    this.value = izq?.value / der?.value;
                     this.type = Type.DOUBLE;
                     return this;
                 }else{
@@ -203,20 +235,20 @@ export class aritmetica extends AbstractSQLExpression{
                     return this;
                 }
             case '%':
-                if(izq.type == Type.INT && der.type == Type.INT ){
-                    this.value = izq.value % der.value;
+                if(izq?.type == Type.INT && der?.type == Type.INT ){
+                    this.value = izq?.value % der?.value;
                     this.type = Type.INT
                     return this; 
-                } else if(izq.type == Type.INT && der.type == Type.DOUBLE){
-                    this.value = parseFloat(izq.value) % der.value;
+                } else if(izq?.type == Type.INT && der?.type == Type.DOUBLE){
+                    this.value = parseFloat(izq?.value) % der?.value;
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.INT){
-                    this.value = izq.value % parseFloat(der.value);
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.INT){
+                    this.value = izq?.value % parseFloat(der?.value);
                     this.type = Type.DOUBLE;
                     return this;
-                } else if(izq.type == Type.DOUBLE && der.type == Type.DOUBLE){
-                    this.value = izq.value % der.value;
+                } else if(izq?.type == Type.DOUBLE && der?.type == Type.DOUBLE){
+                    this.value = izq?.value % der?.value;
                     this.type = Type.DOUBLE;
                     return this;
                 }else{
