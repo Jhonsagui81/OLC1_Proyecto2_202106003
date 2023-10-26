@@ -58,7 +58,6 @@ class InterpreteController {
     }
     rootAST.addChildsNode(value);
     let asts= tree.getDot(rootAST, false);
-    console.log("HASDFJASKD: "+asts);
     
     
     res.json({

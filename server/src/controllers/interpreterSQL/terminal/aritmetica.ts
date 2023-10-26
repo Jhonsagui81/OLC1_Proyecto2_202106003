@@ -256,8 +256,66 @@ export class aritmetica extends AbstractSQLExpression{
                     this.type = Type.NULL;
                     return this;
                 }
-            
-            
+            case '=':
+                if(izq?.value == der?.value){
+                    this.value = true;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }else {
+                    this.value = false;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }
+            case '!=':
+                if(izq?.value != der?.value){
+                    this.value = true;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }else {
+                    this.value = false;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }
+            case '<':
+                if(izq?.value < der?.value){
+                    this.value = true;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }else {
+                    this.value = false;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }
+            case '<=':
+                if(izq?.value <= der?.value){
+                    this.value = true;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }else {
+                    this.value = false;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }
+            case '>':
+                if(izq?.value > der?.value){
+                    this.value = true;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }else {
+                    this.value = false;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }
+            case '>=':
+                if(izq?.value >= der?.value){
+                    this.value = true;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }else {
+                    this.value = false;
+                    this.type = Type.BOOLEAN
+                    return this; 
+                }
         } 
     }
 

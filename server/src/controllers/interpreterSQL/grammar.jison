@@ -84,6 +84,12 @@
 "len"         return 'TK_LEN';
 "typeof"      return 'TK_TYPEOF';
 
+// -------------->IF 
+"if"          return 'TK_IF';
+"then"        return 'TK_THEN';
+"else"        return 'TK_ELSE';
+
+
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
 "end"         return 'TK_END';
@@ -170,11 +176,13 @@
   const {Truncate} = require('./nonterminal/nativas/truncate');
   const {Typeof} = require('./nonterminal/nativas/typeof'); 
 
+  //Setencias de control 
+  const {If} = require('./nonterminal/sentencia_control/if');
 %}
 
 // ------> Precedencia
 %left 'TK_OR'
-%left 'TK_ADD'
+%left 'TK_AND'
 %right 'TK_NOT'
 %left 'TK_IGUALACION' 'TK_DIFERENCIACION' 'TK_MENORQUE' 'TK_MENORIGUAL' 'TK_MAYORQUE' 'TK_MAYORIGUAL'
 %left 'TK_MAS' 'TK_MENOS'
@@ -223,19 +231,35 @@ instrucciones_locales
 ;
 
 instrucci_local
-  :bloques TK_PTCOMA                  { $$ = $1; }
+  :bloques                   { $$ = $1; }
   |declaracion TK_PTCOMA              { $$ = $1; }
   |dml TK_PTCOMA                      { $$ = $1; }
   //|casteo
   //|llamadas
   |nativas  TK_PTCOMA                          { $$ = $1; }
-  //|sentencias_control
+  |sentencias_control   TK_PTCOMA              { $$ = $1; }
   //|sebtencias_ciclicas
   | error TK_PTCOMA
   	{   
       console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
       Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
     }
+;
+
+sentencias_control
+  : if          { $$ = $1; }
+  | case        { $$ = $1; }
+;
+
+if
+  : TK_IF TK_ARROBA exp logicos TK_ARROBA exp TK_THEN TK_BEGIN instrucciones_locales TK_END 
+  { $$ = new If(@1.first_line, @1.first_column, $3, $4, $6, $9, null); }
+  | TK_IF TK_ARROBA exp TK_THEN TK_BEGIN instrucciones_locales TK_END
+  { $$ = new If(@1.first_line, @1.first_column, $3, null, null, $6, null); }
+  | TK_IF TK_ARROBA exp logicos TK_ARROBA exp TK_THEN instrucciones_locales TK_ELSE instrucciones_locales TK_END TK_IF
+  { $$ = new If(@1.first_line, @1.first_column, $3, $4, $6, $8, $10); }
+  | TK_IF TK_ARROBA exp TK_THEN instrucciones_locales TK_ELSE instrucciones_locales TK_END TK_IF
+  { $$ = new If(@1.first_line, @1.first_column, $3, null, null, $5, $7); }
 ;
 
 declaracion
@@ -392,6 +416,12 @@ exp
   |exp TK_POR exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "*", $3 ); }
   |exp TK_DIV exp     { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "/", $3 ); }
   |exp TK_MODULO exp  { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "%", $3 ); }
+  |exp TK_IGUALACION exp { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "=", $3 );}
+  |exp TK_DIFERENCIACION exp { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "!=", $3 );}
+  |exp TK_MENORQUE exp   { $$ = new aritmetica(@1.first_line, @1.first_column, $1, "<", $3); }
+  |exp TK_MENORQUE TK_IGUALACION exp {$$ = new aritmetica(@1.first_line, @1.first_column, $1, "<=", $4);}
+  |exp TK_MAYORQUE exp   { $$ = new aritmetica(@1.first_line, @1.first_column, $1, ">", $3); }
+  |exp TK_MAYORQUE TK_IGUALACION exp { $$ = new aritmetica(@1.first_line, @1.first_column, $1, ">=", $4); }
   |TK_MENOS valor     { $$ = new LiteralExpression(@1.first_line, @1.first_column, $2, Type.NEGATIVE); }
 ;
 
@@ -406,6 +436,7 @@ valor
   | TK_NULL { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.NULL); }
   | TK_IDENTIFICADOR  { $$ = new id(@1.first_line, @1.first_column,$1); }
 ;
+
 
 tipos
   : TK_TENTERO      { $$ = Type.INT; }

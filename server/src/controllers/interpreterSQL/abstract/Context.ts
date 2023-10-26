@@ -60,9 +60,10 @@ export class Context {
 
     //LE asiga un valor a la variable que este vacia 
     public set_variable(id:string, valor: any){
+      let result = '';
       let env: Context = this;
       if(!env.symbolTable.has(id.toLowerCase())){
-        console.log("Esta variable no esta declarada en este ambito");
+        result += "Esta variable no esta declarada en este ambito";
       }else{
         let aux = env.symbolTable.get(id.toLowerCase())!;
         aux["valor"] = valor
@@ -114,7 +115,7 @@ export class Context {
       });
       // insertar la tupla en la tabla
       table.tuples.push(newTuple);
-      this.getTables(); //imprime las tablas almacenadas
+  //imprime las tablas almacenadas
 
     } else {
       console.log("Error: la tabla no existe");
@@ -706,7 +707,7 @@ export class Context {
       if (env.tables.has(id.toLowerCase())) {  //SI ESTA TABLA YA EXISTE
         const table = env.tables.get(id.toLowerCase())!; //obtiene la tabla
         table.fields.push(field);
-        this.getTables();
+    
         
       }else {
         console.log("Error, La tabla "+id+" ya existe en el entorno");
@@ -731,7 +732,7 @@ export class Context {
         for(let objeto of new_list){
           table.fields.push(objeto);
         }
-        this.getTables();
+       
         
       }
     }
@@ -749,10 +750,6 @@ export class Context {
         env.tables.delete(id.toLowerCase());
         //inserta la tabla con la nueva key
         env.tables.set(new_name.toLowerCase(), table);
-        
-        //eliminar la tabla anterio, no actualizada
-
-        this.getTables();
 
       }else{
         console.log("No existe tabla con ese id!")
@@ -769,7 +766,6 @@ export class Context {
             objeto["value"] = new_name;
           }
         }
-        this.getTables();
       }
     }
 
@@ -778,7 +774,6 @@ export class Context {
       let env: Context | null = this;
       if(env.tables.has(id.toLowerCase())){
         env.tables.delete(id.toLowerCase());
-        this.getTables();
       }
     }
 
