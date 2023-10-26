@@ -7,6 +7,7 @@ import { Node } from "../../../abstract/Node";
 
 
 export class where_column_relaci extends AbstractSQLExpression {
+    public expres1: any;
     constructor(line: number, colum: number,
         private  columnas: [],
         private name_table: string,
@@ -14,12 +15,14 @@ export class where_column_relaci extends AbstractSQLExpression {
         private operador: string,
         private expre: LiteralExpression | id) {
         super(line, colum);
+        this.expres1 = undefined; 
 
     }
 
     public interpret(context: Context) {
         let result = '';
         let exp = this.expre.interpret(context);
+        this.expres1 = exp.value; 
 
         result += "->CONSULTA SELECT ";
         let neww = '';
@@ -33,7 +36,26 @@ export class where_column_relaci extends AbstractSQLExpression {
         return result; 
     }
     public getAST(): Node {
-        return new Node("");
+        let node: Node = new Node("SELECT");
+        node.addChild("SELECT");
+        let node_colu: Node = new Node("COLUMNAS");
+        this.columnas.forEach((ele) => {
+            node_colu.addChild(ele);
+        });
+        node.addChildsNode(node_colu);
+        node.addChild("FROM")
+        let nodeID: Node = new Node("ID");
+        nodeID.addChild(this.name_table);
+        node.addChildsNode(nodeID); 
+        node.addChild("WHERE"); 
+
+        let node_con1: Node = new Node("CONDICION1");
+        node_con1.addChild(this.name_colum_condicion);
+        node_con1.addChild(this.operador);
+        node_con1.addChild(this.expres1);
+        node.addChildsNode(node_con1);
+
+        return node; 
     }
 
 }

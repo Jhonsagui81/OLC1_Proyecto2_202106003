@@ -6,7 +6,7 @@ import { id } from "../../../terminal/id";
 import { columna_update } from "./colum_update";
 
 export class update_logic_not extends AbstractSQLExpression {
-
+    public expres1:any;
     public oper_verdadero:string;
     constructor(line:number, column: number,
         private id:string,
@@ -16,6 +16,7 @@ export class update_logic_not extends AbstractSQLExpression {
         private exp1: LiteralExpression| id ){
             super(line, column);
             this.oper_verdadero = '';
+            this.expres1 = undefined;
 
         }
 
@@ -61,6 +62,26 @@ export class update_logic_not extends AbstractSQLExpression {
             return result; 
         }
         public getAST(): Node {
-            return new Node("");
+            let node: Node = new Node("UPDATE");
+            node.addChild("UPDATE");
+            let nodeID: Node = new Node("ID");
+            nodeID.addChild(this.id);
+            node.addChildsNode(nodeID);
+            node.addChild("SET");
+            let node_colu: Node = new Node("COLUMNAS");
+            this.lista.forEach((ele) => {
+                node_colu.addChildsNode(ele.getAST());
+            });
+            node.addChildsNode(node_colu); 
+            node.addChild("WHERE"); 
+            node.addChild("NOT");
+
+            let node_con1: Node = new Node("CONDICION1");
+            node_con1.addChild(this.column_condi);
+            node_con1.addChild(this.opera);
+            node_con1.addChild(this.expres1);
+            node.addChildsNode(node_con1);
+
+            return node;
         }
 }

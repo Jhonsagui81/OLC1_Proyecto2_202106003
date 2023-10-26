@@ -27,6 +27,18 @@ export class simple_select extends AbstractSQLExpression {
       return result;
     }
     public getAST(): Node {
-      return new Node("");
+      let node: Node = new Node("SELECT");
+      node.addChild("SELECT");
+      let node_colu: Node = new Node("COLUMNAS");
+      this.name.forEach((ele) => {
+        node_colu.addChild(ele);
+      })
+      node.addChildsNode(node_colu);
+      node.addChild("FROM");
+      let nodeID: Node = new Node("ID");
+      nodeID.addChild(this.name_table);
+      node.addChildsNode(nodeID);
+
+      return node; 
   }
 }

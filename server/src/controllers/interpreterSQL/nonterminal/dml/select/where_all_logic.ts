@@ -6,6 +6,8 @@ import { id } from '../../../terminal/id';
 
 export class where_all_logic extends AbstractSQLExpression {
 
+    public expres1: any;
+    public expres2: any;
 
     constructor(line:number, colum: number, 
         private name_table: string,
@@ -17,11 +19,16 @@ export class where_all_logic extends AbstractSQLExpression {
         private oper2:string,
         private expre2: LiteralExpression | id ){
             super(line, colum);
+            this.expres1 = undefined;
+            this.expres2 = undefined; 
+
         }
 
         public interpret(context: Context) {
             let exp1 = this.expre1.interpret(context);  //retorno value, type
+            this.expres1 = exp1.value;
             let exp2 = this.expre2.interpret(context);
+            this.expres2 = exp2.value;
             let result = '';
 
             result += "->CONSULTA SELECT * FROM "+this.name_table+" WHERE "+this.condicion1+" "+this.oper1+" "+exp1.value+" "+this.logic+" "+this.condicion2 + " "+this.oper2+" "+exp2.value+"\n"
@@ -30,6 +37,28 @@ export class where_all_logic extends AbstractSQLExpression {
             return result;
         }
         public getAST(): Node {
-            return new Node("");
+            let node: Node = new Node("SELECT");
+            node.addChild("SELECT");
+            node.addChild("*");
+            node.addChild("FROM");
+            let nodeID: Node = new Node("ID");
+            nodeID.addChild(this.name_table);
+            node.addChildsNode(nodeID);
+            node.addChild("WHERE")
+
+            let node_con1: Node = new Node("CONDICION1");
+            node_con1.addChild(this.condicion1);
+            node_con1.addChild(this.oper1);
+            node_con1.addChild(this.expres1);
+            node.addChildsNode(node_con1);
+
+            let node_con2: Node = new Node("CONDICION2");
+            node.addChild(this.logic);
+            node_con2.addChild(this.condicion2);
+            node_con2.addChild(this.oper2);
+            node_con2.addChild(this.expres2);
+            node.addChildsNode(node_con2)
+
+            return node;
         }
 }

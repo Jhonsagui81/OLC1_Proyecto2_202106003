@@ -16,6 +16,13 @@ export class truncate_table extends AbstractSQLExpression {
         return result; 
     }
     public getAST(): Node {
-        return new Node("");
+        let node: Node = new Node("TRUNCATE");
+        node.addChild("TRUNCATE");
+        node.addChild("TABLE");
+        let nodeID: Node = new Node("ID");
+        nodeID.addChild(this.id);
+        node.addChildsNode(nodeID);
+        
+        return node; 
     }
 }

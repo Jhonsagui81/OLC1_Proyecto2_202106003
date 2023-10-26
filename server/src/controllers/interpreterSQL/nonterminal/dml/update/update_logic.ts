@@ -6,7 +6,8 @@ import { id } from "../../../terminal/id";
 import { Node } from "../../../abstract/Node";
 
 export class update_logic extends AbstractSQLExpression {
-
+    public expres1:any;
+    public expres2:any;
     constructor(line:number, column: number, 
         private id:string,
         private lista: columna_update[], 
@@ -18,13 +19,17 @@ export class update_logic extends AbstractSQLExpression {
         private opera2:string,
         private exp2:LiteralExpression | id ){
             super(line, column);
+            this.expres1 = undefined;
+            this.expres2 = undefined; 
         }
 
 
 
         public interpret(context: Context) {
             let exp1 = this.exp1.interpret(context);
+            this.expres1 = exp1.value;
             let exp2 = this.exp2.interpret(context);
+            this.expres2 = exp2.value; 
             let result =''; 
 
             const fields = this.lista.map((elemento) =>{
@@ -44,6 +49,32 @@ export class update_logic extends AbstractSQLExpression {
             return result; 
         }
         public getAST(): Node {
-            return new Node("");
+            let node: Node = new Node("UPDATE");
+            node.addChild("UPDATE");
+            let nodeID: Node = new Node("ID");
+            nodeID.addChild(this.id);
+            node.addChildsNode(nodeID);
+            node.addChild("SET");
+            let node_colu: Node = new Node("COLUMNAS");
+            this.lista.forEach((ele) => {
+                node_colu.addChildsNode(ele.getAST());
+            });
+            node.addChildsNode(node_colu); 
+            node.addChild("WHERE"); 
+
+            let node_con1: Node = new Node("CONDICION1");
+            node_con1.addChild(this.column_condi1);
+            node_con1.addChild(this.opera1);
+            node_con1.addChild(this.expres1);
+            node.addChildsNode(node_con1);
+
+            let node_con2: Node = new Node("CONDICION2");
+            node.addChild(this.logic);
+            node_con2.addChild(this.column_condi2);
+            node_con2.addChild(this.opera2);
+            node_con2.addChild(this.expres2);
+            node.addChildsNode(node_con2)
+
+            return node; 
         }
 }

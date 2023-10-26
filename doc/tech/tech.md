@@ -13,7 +13,7 @@
 ## **Introducción** 
 El proyecto consiste en el desarrollo de un interprete para el lenguaje de programación **QueryCrypter**. El interprete es capaz de leer un archivo de texto con extensión **.cp** y ejecutarlo. El interprete es capaz de ejecutar instrucciones y expresiones de un lenguaje nativo, tales como:
 
-- Creacion de tablas 
+- Creacion de tablas
 - Inserccion de datos a tablas
 - Consultas a las tablas
 - Actualizacion de tablas

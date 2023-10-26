@@ -16,6 +16,13 @@ export class short_select extends AbstractSQLExpression {
     }
 
     public getAST(): Node {
-        return new Node("");
+        let node: Node = new Node("SELECT");
+        node.addChild("SELECT");
+        node.addChild("*");
+        node.addChild("FROM");
+        let nodeID: Node = new Node("ID");
+        nodeID.addChild(this.name_table);
+        node.addChildsNode(nodeID);
+        return node;
     }
 }
