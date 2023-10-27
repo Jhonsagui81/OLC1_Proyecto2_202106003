@@ -36,3 +36,4 @@ const {Case} = require('./nonterminal/sentencia_control/case');
 const {While} = require('./nonterminal/sentencias_ciclicas/while');
 const {For} = require('./nonterminal/sentencias_ciclicas/for');
 const {Transferencia} = require('./nonterminal/transferencia/transferencia');
+const {Funcion} = require('./nonterminal/funciones/funcion');

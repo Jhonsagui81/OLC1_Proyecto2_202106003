@@ -101,6 +101,11 @@
 "break"       return 'TK_BREAK';
 "continue"    return 'TK_CONTINUE'; 
 
+// ----------------> funciones
+"function"    return 'TK_FUNCTION';
+"returns"     return 'TK_RETURNS'; 
+
+
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
 "end"         return 'TK_END';
@@ -197,6 +202,9 @@
   const {For} = require('./nonterminal/sentencias_ciclicas/for');
   const {Transferencia} = require('./nonterminal/transferencia/transferencia');
 
+  //FUNCIONES 
+  const {Funcion} = require('./nonterminal/funciones/funcion');
+
 
 %}
 
@@ -230,7 +238,7 @@ instrucciones
 instruccion_global
 	: ddl   TK_PTCOMA                     { $$ = $1; }
 	| dml   TK_PTCOMA                     { $$ = $1; }
-  //| funciones TK_PTCOMA                 { $$ = $1; }
+  | funciones TK_PTCOMA                 { $$ = $1; }
   //| metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
   | nativas TK_PTCOMA     { $$ = $1; }
@@ -239,6 +247,11 @@ instruccion_global
       console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
       Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
     }
+;
+
+funciones
+    :TK_CREATE TK_FUNCTION TK_IDENTIFICADOR TK_PARIZQ listaAtributosTabla TK_PARDER TK_RETURNS tipos TK_BEGIN instrucciones_locales TK_END
+    { $$ = new Funcion(@1.first_line, @1.first_column, $3, $5, $8, $10); }
 ;
 
 bloques
@@ -379,6 +392,7 @@ listaAtributosTabla
 
 atributoTabla
   : TK_IDENTIFICADOR tipos            { $$ = new FieldExpression(@1.first_line, @1.first_column,$1, $2); }
+  | TK_ARROBA TK_IDENTIFICADOR tipos            { $$ = new FieldExpression(@1.first_line, @1.first_column,$2, $1); }
   | TK_IDENTIFICADOR {$$ = $1; }
 ;
 
