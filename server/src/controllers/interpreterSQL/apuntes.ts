@@ -37,3 +37,4 @@ const {While} = require('./nonterminal/sentencias_ciclicas/while');
 const {For} = require('./nonterminal/sentencias_ciclicas/for');
 const {Transferencia} = require('./nonterminal/transferencia/transferencia');
 const {Funcion} = require('./nonterminal/funciones/funcion');
+const {Proce} = require('./nonterminal/funciones/metodo');

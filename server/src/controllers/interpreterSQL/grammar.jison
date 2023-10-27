@@ -106,6 +106,9 @@
 "returns"     return 'TK_RETURNS'; 
 "return"      return 'TK_RETURN';
 
+//-----------------> PRocedimientos
+"procedure"   return 'TK_PROCEDURE';
+
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -205,6 +208,7 @@
 
   //FUNCIONES 
   const {Funcion} = require('./nonterminal/funciones/funcion');
+  const {Proce} = require('./nonterminal/funciones/metodo');
 
 
 %}
@@ -240,7 +244,7 @@ instruccion_global
 	: ddl   TK_PTCOMA                     { $$ = $1; }
 	| dml   TK_PTCOMA                     { $$ = $1; }
   | funciones TK_PTCOMA                 { $$ = $1; }
-  //| metodos TK_PTCOMA                   { $$ = $1; }
+  | metodos TK_PTCOMA                   { $$ = $1; }
   | bloques TK_PTCOMA     { $$ = $1; }
   | nativas TK_PTCOMA     { $$ = $1; }
 	| error TK_PTCOMA
@@ -249,6 +253,12 @@ instruccion_global
       Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
     }
 ;
+
+metodos
+    :TK_CREATE TK_PROCEDURE TK_IDENTIFICADOR listaAtributosTabla TK_AS TK_BEGIN instrucciones_locales TK_END 
+    { $$ = new Proce(@1.first_line, @1.first_column, $3, $4, $7 ); }
+;
+
 
 funciones
     :TK_CREATE TK_FUNCTION TK_IDENTIFICADOR TK_PARIZQ listaAtributosTabla TK_PARDER TK_RETURNS tipos TK_BEGIN instrucciones_locales TK_RETURN exp TK_PTCOMA TK_END
