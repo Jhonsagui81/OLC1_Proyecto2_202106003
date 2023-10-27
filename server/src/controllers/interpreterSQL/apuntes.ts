@@ -31,3 +31,5 @@ const {Len} = require('./nonterminal/nativas/len');
 const {Truncate} = require('./nonterminal/nativas/truncate');
 const {Typeof} = require('./nonterminal/nativas/typeof'); 
 const {If} = require('./nonterminal/sentencia_control/if');
+const {Condi_case} = require('./nonterminal/sentencia_control/condi_case');
+const {Case} = require('./nonterminal/sentencia_control/case');

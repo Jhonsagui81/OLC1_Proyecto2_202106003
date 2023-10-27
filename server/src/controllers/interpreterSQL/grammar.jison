@@ -89,6 +89,10 @@
 "then"        return 'TK_THEN';
 "else"        return 'TK_ELSE';
 
+//---------------->case
+"case"        return 'TK_CASE';
+"when"        return 'TK_WHEN';
+
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -178,6 +182,8 @@
 
   //Setencias de control 
   const {If} = require('./nonterminal/sentencia_control/if');
+  const {Condi_case} = require('./nonterminal/sentencia_control/condi_case');
+  const {Case} = require('./nonterminal/sentencia_control/case');
 %}
 
 // ------> Precedencia
@@ -260,6 +266,32 @@ if
   { $$ = new If(@1.first_line, @1.first_column, $3, $4, $6, $8, $10); }
   | TK_IF TK_ARROBA exp TK_THEN instrucciones_locales TK_ELSE instrucciones_locales TK_END TK_IF
   { $$ = new If(@1.first_line, @1.first_column, $3, null, null, $5, $7); }
+;
+
+case
+  :TK_CASE TK_IDENTIFICADOR lista_condiciones TK_END
+  { $$ = new Case(@1.first_line, @1.first_column, $2, $3, null);}
+  |TK_CASE TK_IDENTIFICADOR lista_condiciones TK_END TK_AS TK_IDENTIFICADOR
+  { $$ = new Case(@1.first_line, @1.first_column, $2, $3, $6); }
+  |TK_CASE lista_condiciones TK_END
+  { $$ = new Case(@1.first_line, @1.first_column, null, $2, null); }
+  |TK_CASE lista_condiciones TK_END TK_AS TK_IDENTIFICADOR
+  { $$ = new Case(@1.first_line, @1.first_column, null, $2, $5); }
+  
+;
+
+lista_condiciones
+  :lista_condiciones con_case  { $1.push($2); $$ = $1; }
+  |con_case  { $$ = [$1]; }
+;
+
+con_case
+  :TK_WHEN exp logicos exp TK_THEN exp
+  { $$ = new Condi_case(@1.first_line, @1.first_column, $2, $3, $4, $6); }
+  |TK_WHEN exp TK_THEN exp
+  { $$ = new Condi_case(@1.first_line, @1.first_column, $2, null, null, $4); }
+  |TK_ELSE exp
+  { $$ = new Condi_case(@1.first_line, @1.first_column, null, null, null, $2); }
 ;
 
 declaracion

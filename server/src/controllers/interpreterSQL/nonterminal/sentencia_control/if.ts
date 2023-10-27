@@ -25,7 +25,7 @@ export class If extends  AbstractSQLExpression{
 
         public getAST(): Node {
 
-            let node: Node = new Node("SENTECIA CONTROL");
+            let node: Node = new Node("IF");
 
             if(this.logic == null && this.instruc_else ==null){ //if simple
 
