@@ -5,6 +5,7 @@ import { aritmetica } from "../../terminal/aritmetica";
 import { id } from "../../terminal/id";
 import { FieldExpression } from "../../terminal/FieldExpression";
 import { Node } from "../../abstract/Node";
+import { Symbololo } from "../../tools/tablasym";
 
 export class declaracion extends AbstractSQLExpression{
 
@@ -25,7 +26,7 @@ export class declaracion extends AbstractSQLExpression{
         this.tipo = valor.type;
 
         let expres = this.expresion.interpret(context);
-
+        Symbololo.addError("Variable", this.nombre, this.line, this.column);
         context.add_variable_dato(this.nombre, expres);
         return result; 
     }

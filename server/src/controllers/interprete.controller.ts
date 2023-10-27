@@ -4,7 +4,7 @@ import { Context } from "./interpreterSQL/abstract/Context";
 import Tree from "./interpreterSQL/tools/Tree";
 import { Node } from "./interpreterSQL/abstract/Node";
 import { Errors } from "./interpreterSQL/tools/Errors";
-
+import { Symbololo } from "./interpreterSQL/tools/tablasym";
 
 
 class InterpreteController {
@@ -24,6 +24,7 @@ class InterpreteController {
     // variable codigo fuente
     const text = req.body.data;
     Errors.cleanErrors();
+    Symbololo.cleanErrors();
     console.log("Codigo de entrada:  " + text);
     let result = ""
     
@@ -63,7 +64,8 @@ class InterpreteController {
     res.json({
       "console": result,
       "ast": asts,
-      "err": Errors.getErrors()
+      "err": Errors.getErrors(),
+      "tab": Symbololo.getErrors()
     })
 
 

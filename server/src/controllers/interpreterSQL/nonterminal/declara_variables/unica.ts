@@ -2,6 +2,7 @@ import { AbstractSQLExpression } from "../../abstract/AbstractSQLExpression";
 import { Context } from "../../abstract/Context";
 import { Node } from "../../abstract/Node";
 import { FieldExpression } from "../../terminal/FieldExpression";
+import { Symbololo } from "../../tools/tablasym";
 
 export class una_variable extends AbstractSQLExpression{
 
@@ -22,6 +23,7 @@ export class una_variable extends AbstractSQLExpression{
         this.nombre = valor.value;
         this.tipo = valor.type;
 
+        Symbololo.addError("Variable", this.nombre, this.line, this.column);
         context.add_variable(this.nombre, this.tipo);
         return result;
     }

@@ -22,6 +22,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
   const [dotContent, setDotContent] = useState<string>('');
   const [ast, setAst] = useState('');
   const [err, setErr] = useState('');
+  const [tab, setTab] = useState('');
   const [isReporte, setIsReporteOpen] = useState(false);
 
 
@@ -102,7 +103,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
 
         setEditorContent2(data.console);
         setAst(data.ast);
-        setErr(data.err)
+        setErr(data.err);
+        setTab(data.tab);
 
       } else {
         // La solicitud falló
@@ -160,6 +162,28 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
         });
     };
 
+
+    const generateGraphTab = () => {
+
+      const url = "https://quickchart.io/graphviz";
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          graph: tab,
+        }),
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const urlImagen = URL.createObjectURL(blob);
+          // Hacer algo con la URL de la imagen
+          
+          window.open(urlImagen);
+        });
+    };
   //PARA GUARDAR DOCUMENTOS 
   const handleSaveFile = () => {
     const fileName = prompt('Ingrese el nombre del archivo');
@@ -247,8 +271,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ setEditorContent, setEdit
       <div className="reportes-menu">
         <div onClick={generateGraph}>AST</div>
         <div onClick={generateGraphError}>ERRORES</div>
-        <div>TOKENS</div>
-        <div>SYMBOL</div>
+        <div onClick={generateGraphTab}>SYMBOL</div>
       </div>
     )}
   </div>
