@@ -12,7 +12,7 @@ export class If extends  AbstractSQLExpression{
         private logic: string|any,
         private exp2: LiteralExpression | id |aritmetica|any,
         private instruc_if: any[],
-        private instruc_else: any[]|any
+        private instruc_else: any[]
         ){
             super(line, column);
         }
@@ -20,6 +20,16 @@ export class If extends  AbstractSQLExpression{
         public interpret(context: Context) {
             let result = '';
             result += '-> IF\n';
+            this.instruc_if.forEach((ele) => {
+                try{
+                    result += ele.interpret(context); 
+                } catch {} 
+            });
+            this.instruc_else.forEach((ele) => {
+                try{
+                    result += ele.interpret(context); 
+                } catch {} 
+            });
             return result
         }
 

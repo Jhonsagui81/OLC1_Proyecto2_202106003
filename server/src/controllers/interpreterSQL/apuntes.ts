@@ -34,3 +34,4 @@ const {If} = require('./nonterminal/sentencia_control/if');
 const {Condi_case} = require('./nonterminal/sentencia_control/condi_case');
 const {Case} = require('./nonterminal/sentencia_control/case');
 const {While} = require('./nonterminal/sentencias_ciclicas/while');
+const {For} = require('./nonterminal/sentencias_ciclicas/for');

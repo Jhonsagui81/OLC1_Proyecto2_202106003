@@ -14,6 +14,11 @@ export class Case extends AbstractSQLExpression {
         public interpret(context: Context) {
             let resuldt = '';
             resuldt += "->CASE\n";
+            this.lista.forEach((ele) => {
+                try{
+                    resuldt += ele.interpret(context); 
+                } catch {} 
+            });
             return resuldt; 
         }
 

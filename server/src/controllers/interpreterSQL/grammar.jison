@@ -95,6 +95,9 @@
 
 //----------------> CICLOS
 "while"       return 'TK_WHILE';
+"for"         return 'TK_FOR';
+"in"          return 'TK_IN';
+"loop"        return 'TK_LOOP';
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -189,6 +192,7 @@
 
   //Sentencias sebtencias_ciclicas
   const {While} = require('./nonterminal/sentencias_ciclicas/while');
+  const {For} = require('./nonterminal/sentencias_ciclicas/for');
 
 
 %}
@@ -271,6 +275,11 @@ while
     { $$ = new While(@1.first_line, @1.first_column, $3, null, null, $5); }
     |TK_WHILE TK_ARROBA exp logicos TK_ARROBA exp TK_BEGIN instrucciones_locales TK_END
     { $$ = new While(@1.first_line, @1.first_column, $3, $4, $6, $8); }
+;
+
+for
+    :TK_FOR TK_IDENTIFICADOR TK_IN TK_ENTERO TK_PUNTO TK_PUNTO TK_ENTERO TK_BEGIN instrucciones_locales TK_END TK_LOOP
+    { $$ = new For(@1.first_line, @1.first_column, $2, $4, $7, $9 ); }
 ;
 
 sentencias_control

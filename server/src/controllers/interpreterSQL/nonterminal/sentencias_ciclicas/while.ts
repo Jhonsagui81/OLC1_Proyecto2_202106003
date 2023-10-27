@@ -17,6 +17,11 @@ export class While extends AbstractSQLExpression {
         public interpret(context: Context) {
             let result = '';
             result += '->WHILE\n';
+            this.instruc_if.forEach((ele) => {
+                try{
+                   result += ele.interpret(context);
+                } catch {} 
+            });
             return result; 
         }
 
