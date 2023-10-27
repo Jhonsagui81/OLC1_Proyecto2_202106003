@@ -2,6 +2,8 @@ import { AbstractSQLExpression } from "../../abstract/AbstractSQLExpression";
 import { Context } from "../../abstract/Context";
 import { Node } from "../../abstract/Node";
 import { FieldExpression } from "../../terminal/FieldExpression";
+import { aritmetica } from "../../terminal/aritmetica";
+import { id } from "../../terminal/id";
 
 export class Funcion extends AbstractSQLExpression{
 
@@ -9,7 +11,8 @@ export class Funcion extends AbstractSQLExpression{
         private id:string,
         private fields: FieldExpression[],
         private returnType: string, 
-        private instruc_if: any[]){
+        private instruc_if: any[],
+        private retur: FieldExpression|id|aritmetica){
             super(line, column);
         }
         public interpret(context: Context) {
@@ -49,6 +52,8 @@ export class Funcion extends AbstractSQLExpression{
                     nodeInst.addChildsNode(ele.getAST());
                 } catch {} 
             });
+            nodeInst.addChild("RETURN");
+            nodeInst.addChildsNode(this.retur.getAST());
             nodo.addChildsNode(nodeInst);
             nodo.addChild("END");
             return nodo; 

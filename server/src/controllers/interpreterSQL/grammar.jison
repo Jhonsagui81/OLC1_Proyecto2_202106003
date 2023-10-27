@@ -104,6 +104,7 @@
 // ----------------> funciones
 "function"    return 'TK_FUNCTION';
 "returns"     return 'TK_RETURNS'; 
+"return"      return 'TK_RETURN';
 
 
 // -------------> bloques
@@ -250,8 +251,8 @@ instruccion_global
 ;
 
 funciones
-    :TK_CREATE TK_FUNCTION TK_IDENTIFICADOR TK_PARIZQ listaAtributosTabla TK_PARDER TK_RETURNS tipos TK_BEGIN instrucciones_locales TK_END
-    { $$ = new Funcion(@1.first_line, @1.first_column, $3, $5, $8, $10); }
+    :TK_CREATE TK_FUNCTION TK_IDENTIFICADOR TK_PARIZQ listaAtributosTabla TK_PARDER TK_RETURNS tipos TK_BEGIN instrucciones_locales TK_RETURN exp TK_PTCOMA TK_END
+    { $$ = new Funcion(@1.first_line, @1.first_column, $3, $5, $8, $10, $12); }
 ;
 
 bloques
