@@ -7,7 +7,7 @@ export class Proce extends AbstractSQLExpression{
 
     constructor(line:number, column:number,
         private id:string,
-        private fields: FieldExpression[],
+        private fields: FieldExpression[] | [],
         private instruc_if: any[],){
             super(line, column);
         }

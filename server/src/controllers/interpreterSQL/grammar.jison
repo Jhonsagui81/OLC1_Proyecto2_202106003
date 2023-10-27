@@ -257,12 +257,16 @@ instruccion_global
 metodos
     :TK_CREATE TK_PROCEDURE TK_IDENTIFICADOR listaAtributosTabla TK_AS TK_BEGIN instrucciones_locales TK_END 
     { $$ = new Proce(@1.first_line, @1.first_column, $3, $4, $7 ); }
+  //  |TK_CREATE TK_PROCEDURE TK_IDENTIFICADOR  TK_AS TK_BEGIN instrucciones_locales TK_END 
+  //  { $$ = new Proce(@1.first_line, @1.first_column, $3, [], $6 ); }
 ;
 
 
 funciones
     :TK_CREATE TK_FUNCTION TK_IDENTIFICADOR TK_PARIZQ listaAtributosTabla TK_PARDER TK_RETURNS tipos TK_BEGIN instrucciones_locales TK_RETURN exp TK_PTCOMA TK_END
     { $$ = new Funcion(@1.first_line, @1.first_column, $3, $5, $8, $10, $12); }
+  //  |TK_CREATE TK_FUNCTION TK_IDENTIFICADOR TK_PARIZQ  TK_PARDER TK_RETURNS tipos TK_BEGIN instrucciones_locales TK_RETURN exp TK_PTCOMA TK_END
+  //  { $$ = new Funcion(@1.first_line, @1.first_column, $3, [], $7, $9, $11); }
 ;
 
 bloques
@@ -311,7 +315,7 @@ while
 ;
 
 for
-    :TK_FOR TK_IDENTIFICADOR TK_IN TK_ENTERO TK_PUNTO TK_PUNTO TK_ENTERO TK_BEGIN instrucciones_locales TK_END TK_LOOP
+    :TK_FOR TK_ARROBA TK_IDENTIFICADOR TK_IN TK_ENTERO TK_PUNTO TK_PUNTO TK_ENTERO TK_BEGIN instrucciones_locales TK_END TK_LOOP
     { $$ = new For(@1.first_line, @1.first_column, $2, $4, $7, $9 ); }
 ;
 
