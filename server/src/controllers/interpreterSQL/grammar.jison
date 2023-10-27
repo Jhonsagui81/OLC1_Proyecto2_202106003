@@ -98,6 +98,8 @@
 "for"         return 'TK_FOR';
 "in"          return 'TK_IN';
 "loop"        return 'TK_LOOP';
+"break"       return 'TK_BREAK';
+"continue"    return 'TK_CONTINUE'; 
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -193,6 +195,7 @@
   //Sentencias sebtencias_ciclicas
   const {While} = require('./nonterminal/sentencias_ciclicas/while');
   const {For} = require('./nonterminal/sentencias_ciclicas/for');
+  const {Transferencia} = require('./nonterminal/transferencia/transferencia');
 
 
 %}
@@ -256,13 +259,19 @@ instrucci_local
   |nativas  TK_PTCOMA                          { $$ = $1; }
   |sentencias_control   TK_PTCOMA              { $$ = $1; }
   |sebtencias_ciclicas  TK_PTCOMA              { $$ = $1; }
-  //|contine
-  //|break
+  |transferencia        TK_PTCOMA              { $$ = $1; }
   | error TK_PTCOMA
   	{   
       console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
       Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
     }
+;
+
+transferencia
+    :TK_BREAK
+    {$$ = new Transferencia(@1.first_line, @1.first_column, $1); }
+    |TK_CONTINUE
+    {$$ = new Transferencia(@1.first_line, @1.first_column, $1); }
 ;
 
 sebtencias_ciclicas
