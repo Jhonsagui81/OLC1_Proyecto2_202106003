@@ -93,6 +93,8 @@
 "case"        return 'TK_CASE';
 "when"        return 'TK_WHEN';
 
+//----------------> CICLOS
+"while"       return 'TK_WHILE';
 
 // -------------> bloques
 "begin"       return 'TK_BEGIN';
@@ -184,6 +186,11 @@
   const {If} = require('./nonterminal/sentencia_control/if');
   const {Condi_case} = require('./nonterminal/sentencia_control/condi_case');
   const {Case} = require('./nonterminal/sentencia_control/case');
+
+  //Sentencias sebtencias_ciclicas
+  const {While} = require('./nonterminal/sentencias_ciclicas/while');
+
+
 %}
 
 // ------> Precedencia
@@ -244,12 +251,26 @@ instrucci_local
   //|llamadas
   |nativas  TK_PTCOMA                          { $$ = $1; }
   |sentencias_control   TK_PTCOMA              { $$ = $1; }
-  //|sebtencias_ciclicas
+  |sebtencias_ciclicas  TK_PTCOMA              { $$ = $1; }
+  //|contine
+  //|break
   | error TK_PTCOMA
   	{   
       console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
       Errors.addError("Sintactico", `El caracter ${yytext} no pertenece al lenguaje`, this._$.first_line, this._$.first_column);
     }
+;
+
+sebtencias_ciclicas
+  :while        { $$ = $1; }
+  |for          { $$ = $1; }
+;
+
+while
+    :TK_WHILE TK_ARROBA exp TK_BEGIN instrucciones_locales TK_END 
+    { $$ = new While(@1.first_line, @1.first_column, $3, null, null, $5); }
+    |TK_WHILE TK_ARROBA exp logicos TK_ARROBA exp TK_BEGIN instrucciones_locales TK_END
+    { $$ = new While(@1.first_line, @1.first_column, $3, $4, $6, $8); }
 ;
 
 sentencias_control
@@ -467,6 +488,7 @@ valor
   | TK_FALSE { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.BOOLEAN); }
   | TK_NULL { $$ = new LiteralExpression(@1.first_line, @1.first_column,$1, Type.NULL); }
   | TK_IDENTIFICADOR  { $$ = new id(@1.first_line, @1.first_column,$1); }
+  | TK_ARROBA TK_IDENTIFICADOR  { $$ = new id(@1.first_line, @1.first_column,$2); }
 ;
 
 
